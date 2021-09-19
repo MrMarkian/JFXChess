@@ -1,25 +1,20 @@
 package com.jfxchess.jfxchess.Data;
 
-import com.jfxchess.jfxchess.MainUIController;
+
 import javafx.animation.TranslateTransition;
-import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 public  class BoardManager {
-    static public List<ChessGrid> gameBoard = new ArrayList<ChessGrid>();
+    static public final List<ChessGrid> gameBoard = new ArrayList<>();
     static ChessTeamColor playerToMoveNext;
 
     public static final Rules ruleBook = new Rules();
@@ -27,19 +22,19 @@ public  class BoardManager {
 
     public static String startPos;
     public static String endPos;
-    public static Integer lastClickedPos;
 
-    public static List<Rectangle> ImageGridList = new ArrayList<>();
+
+    public static final List<Rectangle> ImageGridList = new ArrayList<>();
 
     public static double TurnCounter ;
 
-    static MediaController mediaController = new MediaController();
-    public static List<ChessPiece> capturedPieces = new ArrayList<>();
+    static final MediaController mediaController = new MediaController();
+    public static final List<ChessPiece> capturedPieces = new ArrayList<>();
 
     public static Color whiteSquares;
     public static  Color blackSquares;
 
-    public static PGNController pgnController;
+
 
 
     public BoardManager() {
@@ -48,6 +43,7 @@ public  class BoardManager {
 
     public static void SetupNewStandardBoard(){
         int counter=0;
+        gameBoard.clear();
 
         for(;counter <64; counter++){
             gameBoard.add(new  ChessGrid(new ChessPiece(ChessPieceTypes.NONE), counter ));
@@ -82,14 +78,14 @@ public  class BoardManager {
 
 
     public static Pane RenderCapturedPieces(int GridSize){
-        Pane grapicContext = new Pane();
+        Pane graphicContext = new Pane();
         int xPos=0,yPos=0;
         int currentSquare =0;
 
         for (ChessPiece gridSquare : capturedPieces){
             Rectangle r = new Rectangle(xPos,yPos, GridSize,GridSize);
             r.setFill(gridSquare.getGraphic());
-            grapicContext.getChildren().add(r);
+            graphicContext.getChildren().add(r);
 
             xPos += GridSize;
             currentSquare++;
@@ -99,7 +95,7 @@ public  class BoardManager {
 
             }
         }
-        return grapicContext;
+        return graphicContext;
     }
 
     public static StrengthScore calculateBoardValues(List<ChessGrid> gameBoard){
@@ -119,35 +115,36 @@ public  class BoardManager {
 
     public static Pane RenderBoard(int GridSize){
         Pane graphicContext = new Pane();
+        Platform.runLater(() -> {
 
-        int xPos=0,yPos=0;
-        int currentSquare =0;
 
-        for (ChessGrid gridSquare : gameBoard ) {
 
-            Rectangle r = new Rectangle(xPos,yPos, GridSize,GridSize);
-            r.setId(String.valueOf(currentSquare));
-            Label idLabel = new Label(gridSquare.getGridLabel().toString());
+            int xPos=0,yPos=0;
+            int currentSquare =0;
 
-            Rectangle grid = new Rectangle(xPos,yPos,GridSize,GridSize);
-            grid.setId(String.valueOf(currentSquare));
+            for (ChessGrid gridSquare : gameBoard ) {
 
-            if(gameBoard.get(currentSquare).gridColor==GridColor.BLACK){
-                if(whiteSquares!=null){
-                    grid.setFill(blackSquares);
-                }else grid.setFill(Color.LIGHTSLATEGRAY);
+                Rectangle r = new Rectangle(xPos,yPos, GridSize,GridSize);
+                r.setId(String.valueOf(currentSquare));
+                Label idLabel = new Label(gridSquare.getGridLabel().toString());
 
-            }else
+                Rectangle grid = new Rectangle(xPos,yPos,GridSize,GridSize);
+                grid.setId(String.valueOf(currentSquare));
+
+                if(gameBoard.get(currentSquare).gridColor==GridColor.BLACK){
+                    if(whiteSquares!=null){
+                        grid.setFill(blackSquares);
+                    }else grid.setFill(Color.LIGHTSLATEGRAY);
+
+                }else
                 if (whiteSquares !=null){
                     grid.setFill(whiteSquares);
                 }else
-                grid.setFill(Color.GREY);
+                    grid.setFill(Color.GREY);
 
-            idLabel.setTranslateX(r.getX());
-            idLabel.setTranslateY(r.getY());
-            r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
+                idLabel.setTranslateX(r.getX());
+                idLabel.setTranslateY(r.getY());
+                r.setOnMouseClicked(event -> {
                     if(playerToMoveNext == ChessTeamColor.WHITE) {
                         if(event.getButton() == MouseButton.SECONDARY){
                             printInfo(Integer.parseInt(r.getId()));
@@ -177,80 +174,76 @@ public  class BoardManager {
                         }
                     }
 
+                });
+
+                grid.setOnMouseClicked(r.getOnMouseClicked());
+                ImagePattern tmpImg = null;
+                switch (gridSquare.pieceOnGrid.type){
+
+                    case ROOK -> {
+
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackRook);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whiteRook);
+                        }
+
+                    }
+
+                    case BISHOP -> {
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackBishop);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whiteBishop);
+                        }
+                    }
+
+                    case PAWN -> {
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackPawn);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whitePawn);
+                        }
+
+                    }
+
+                    case KNIGHT -> {
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackKnight);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whiteKnight);
+                        }
+                    }
+
+                    case KING -> {
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackKing);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whiteKing);
+                        }
+                    }
+
+                    case QUEEN -> {
+                        if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
+                            tmpImg = new ImagePattern(mediaController.blackQueen);
+                        }
+                        else{
+                            tmpImg = new ImagePattern(mediaController.whiteQueen);
+                        }
+                    }
                 }
-            });
 
-            grid.setOnMouseClicked(r.getOnMouseClicked());
-            ImagePattern tmpImg = null;
-            switch (gridSquare.pieceOnGrid.type){
+                gameBoard.get(currentSquare).pieceOnGrid.graphic = tmpImg;
 
-                case ROOK -> {
+                r.setAccessibleHelp(r.getId());
+                r.setFill(tmpImg);
 
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackRook);
-                    }
-                    else{
-                         tmpImg = new ImagePattern(mediaController.whiteRook);
-                    }
-
-
-                }
-
-                case BISHOP -> {
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackBishop);
-                    }
-                    else{
-                        tmpImg = new ImagePattern(mediaController.whiteBishop);
-                    }
-                }
-
-                case PAWN -> {
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackPawn);
-                    }
-                    else{
-                        tmpImg = new ImagePattern(mediaController.whitePawn);
-                    }
-
-                }
-
-                case KNIGHT -> {
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackKnight);
-                    }
-                    else{
-                        tmpImg = new ImagePattern(mediaController.whiteKnight);
-                    }
-                }
-
-                case KING -> {
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackKing);
-                    }
-                    else{
-                        tmpImg = new ImagePattern(mediaController.whiteKing);
-                    }
-                }
-
-                case QUEEN -> {
-                    if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                        tmpImg = new ImagePattern(mediaController.blackQueen);
-                    }
-                    else{
-                        tmpImg = new ImagePattern(mediaController.whiteQueen);
-                    }
-                }
-            }
-
-            gameBoard.get(currentSquare).pieceOnGrid.graphic = tmpImg;
-
-            r.setAccessibleHelp(r.getId());
-            r.setFill(tmpImg);
-
-            r.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
+                r.setOnMousePressed(event -> {
                     TranslateTransition transition = new TranslateTransition(Duration.millis(500), r);
                     transition.setOnFinished(t -> {
                         r.setX(r.getTranslateX() + r.getX());
@@ -259,48 +252,51 @@ public  class BoardManager {
                         r.setTranslateY(0);
 
                         transition.stop();
-                        transition.setToX(event.getX() - 50 / 2 - r.getX());
-                        transition.setToY(event.getY() - 50 / 2 - r.getY());
+                        transition.setToX(event.getX() - 50d / 2d - r.getX());
+                        transition.setToY(event.getY() - 50d / 2d - r.getY());
                         transition.playFromStart();
                     });
+                });
+                ImageGridList.add(r);
+                ImageGridList.add(grid);
+                graphicContext.getChildren().add(grid);
+                graphicContext.getChildren().add(r);
+                graphicContext.getChildren().add(idLabel);
+                currentSquare++;
+
+                xPos += GridSize;
+                if(currentSquare % 8 == 0){
+                    yPos += GridSize;
+                    xPos = 0;
+
                 }
-            });
-            ImageGridList.add(r);
-            ImageGridList.add(grid);
-            graphicContext.getChildren().add(grid);
-            graphicContext.getChildren().add(r);
-            graphicContext.getChildren().add(idLabel);
-            currentSquare++;
-
-            xPos += GridSize;
-            if(currentSquare % 8 == 0){
-                yPos += GridSize;
-                xPos = 0;
-
             }
-        }
 
-        graphicContext.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            graphicContext.setBorder(new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
+
+        });
+
         return  graphicContext;
     }
 
     public static void MovePiece(Move move){
-        if (ruleBook.isMoveValid(move, gameBoard, gameBoard.get(move.startPosition).pieceOnGrid)) {
+        if (ruleBook.isMoveValid(move, gameBoard)) {
             if(move.isWillResultInCapture()){
                 capturedPieces.add(new ChessPiece(gameBoard.get(move.endPosition).pieceOnGrid.type,gameBoard.get(move.endPosition).pieceOnGrid.teamColor,gameBoard.get(move.endPosition).pieceOnGrid.graphic));
             }
             gameBoard.get(move.endPosition).pieceOnGrid = gameBoard.get(move.startPosition).pieceOnGrid;
-            gameBoard.get(move.startPosition).pieceOnGrid = (ChessPiece) new ChessPiece();
+            gameBoard.get(move.startPosition).pieceOnGrid = new ChessPiece();
             mediaController.chessMoveSound.play();
 
             incrementTurn();
+        }
 
-        }
-        else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid Move:  " + ruleBook.getFailureReason());
-            alert.show();
-        }
+    }
+
+    public static ChessPiece getPieceByPosition(int positionOnBoard){
+        return gameBoard.get(positionOnBoard).pieceOnGrid;
     }
 
 
@@ -318,89 +314,56 @@ public  class BoardManager {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("P");
-                        }
-                        case BLACK -> {
-                            FENString.append("p");
-                        }
+                        case WHITE -> FENString.append("P");
+                        case BLACK -> FENString.append("p");
                     }
-
-
                 }
                 case BISHOP -> {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("B");
-                        }
+                        case WHITE -> FENString.append("B");
 
-                        case BLACK -> {
-                            FENString.append("b");
-                        }
+                        case BLACK -> FENString.append("b");
                     }
-
                 }
                 case ROOK -> {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("R");
-                        }
+                        case WHITE -> FENString.append("R");
 
-                        case BLACK -> {
-                            FENString.append("r");
-                        }
+                        case BLACK -> FENString.append("r");
                     }
-
                 }
                 case KNIGHT -> {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("N");
-                        }
+                        case WHITE -> FENString.append("N");
 
-                        case BLACK -> {
-                            FENString.append("n");
-                        }
+                        case BLACK -> FENString.append("n");
                     }
-
                 }
                 case QUEEN -> {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("Q");
-                        }
+                        case WHITE -> FENString.append("Q");
 
-                        case BLACK -> {
-                            FENString.append("q");
-                        }
+                        case BLACK -> FENString.append("q");
                     }
-
                 }
                 case KING -> {
                     flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
-                        case WHITE -> {
-                            FENString.append("K");
-                        }
+                        case WHITE -> FENString.append("K");
 
-                        case BLACK -> {
-                            FENString.append("k");
-                        }
+                        case BLACK -> FENString.append("k");
                     }
-
                 }
-                case NONE -> {
-                    emptySquareCount++;
-                }
+                case NONE -> emptySquareCount++;
             }
 
             countPosition++;
@@ -415,16 +378,10 @@ public  class BoardManager {
 
 
         switch (BoardManager.playerToMoveNext){
-            case WHITE -> {
-                FENString.append(" w ");
-            }
+            case WHITE -> FENString.append(" w ");
 
-            case BLACK -> {
-                FENString.append(" b ");
-            }
+            case BLACK -> FENString.append(" b ");
         }
-
-
         FENString.append("KQkq - 0 1");
         return FENString.toString();
     }
@@ -432,11 +389,8 @@ public  class BoardManager {
     private static void flushEmpty(StringBuilder input, int emptySquareCount){
         if(emptySquareCount > 0){
             input.append(emptySquareCount);
-
         }
-
     }
-
 
     public static void LoadPositionsFromFEN(String inputFEN) {
 
@@ -453,32 +407,32 @@ public  class BoardManager {
 
            if(Character.isUpperCase(character)){
                ChessPiece tmpPiece = new ChessPiece();
-                switch (character){
-                    case 'P':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.PAWN;
-                        break;
-                    case 'R':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.ROOK;
-                        break;
-                    case 'N':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.KNIGHT;
-                        break;
-                    case 'B':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.BISHOP;
-                        break;
-                    case 'Q':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.QUEEN;
-                        break;
-                    case 'K':
-                        tmpPiece.teamColor = ChessTeamColor.WHITE;
-                        tmpPiece.type = ChessPieceTypes.KING;
-                        break;
-                }
+               switch (character) {
+                   case 'P' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.PAWN;
+                   }
+                   case 'R' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.ROOK;
+                   }
+                   case 'N' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.KNIGHT;
+                   }
+                   case 'B' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.BISHOP;
+                   }
+                   case 'Q' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.QUEEN;
+                   }
+                   case 'K' -> {
+                       tmpPiece.teamColor = ChessTeamColor.WHITE;
+                       tmpPiece.type = ChessPieceTypes.KING;
+                   }
+               }
                 switch (tmpPiece.type){
                     case PAWN -> {
                         if (tmpPiece.teamColor == ChessTeamColor.WHITE)
@@ -506,31 +460,31 @@ public  class BoardManager {
            //black pieces in lowercase
             if(Character.isLowerCase(character)){
                 ChessPiece tmpPiece = new ChessPiece();
-                switch (character){
-                    case 'p':
+                switch (character) {
+                    case 'p' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.PAWN;
-                        break;
-                    case 'r':
+                    }
+                    case 'r' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.ROOK;
-                        break;
-                    case 'n':
+                    }
+                    case 'n' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.KNIGHT;
-                        break;
-                    case 'b':
+                    }
+                    case 'b' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.BISHOP;
-                        break;
-                    case 'q':
+                    }
+                    case 'q' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.QUEEN;
-                        break;
-                    case 'k':
+                    }
+                    case 'k' -> {
                         tmpPiece.teamColor = ChessTeamColor.BLACK;
                         tmpPiece.type = ChessPieceTypes.KING;
-                        break;
+                    }
                 }
 
                 switch (tmpPiece.type){
@@ -557,8 +511,6 @@ public  class BoardManager {
             case "w" -> playerToMoveNext = ChessTeamColor.WHITE;
             case "b" -> playerToMoveNext = ChessTeamColor.BLACK;
         }
-
-        MainUIController main = new MainUIController();
 
 }
 

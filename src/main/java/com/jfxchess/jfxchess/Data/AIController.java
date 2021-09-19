@@ -1,10 +1,6 @@
 package com.jfxchess.jfxchess.Data;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +9,7 @@ import java.util.Random;
 public class AIController {
 
     boolean running = true;
-    public List<String> AIThoughts = new ArrayList<>();
+    public final List<String> AIThoughts = new ArrayList<>();
 
     public boolean isRunning() {
         return running;
@@ -42,7 +38,7 @@ public class AIController {
         int positionCounter = 0;
         for (ChessGrid grid: gameBoard) {
             if (grid.pieceOnGrid.teamColor == sideToPlay){
-                tmpList.addAll(BoardManager.ruleBook.calculatePossibleMoves(grid.pieceOnGrid, gameBoard, new Move(positionCounter)));
+                tmpList.addAll(BoardManager.ruleBook.calculatePossibleMoves(gameBoard, new Move(positionCounter)));
             }
             positionCounter++;
         }
@@ -54,7 +50,6 @@ public class AIController {
         Move rndMove = moveList.get(rnd.nextInt(moveList.size()));
         AIThoughts.add("Im picking at Random : " + rndMove.toString() + " out of a Total of:" + moveList.size());
         BoardManager.MovePiece(rndMove);
-
     }
 
     private void makeBestMove(List<Move> moveList){
@@ -67,12 +62,12 @@ public class AIController {
             if(EvaluateMovePoints(bestMove) > BestScore){
                 moveToGoAheadWith.clear();
                 moveToGoAheadWith.add(bestMove);
-                AIThoughts.add("Ive found a GREAT move to make with a score("+EvaluateMovePoints(bestMove) +")"+ bestMove.toString() + " with a total of:" + moveToGoAheadWith.size());
+                AIThoughts.add("Ive found a GREAT move to make with a score("+EvaluateMovePoints(bestMove) +")"+ bestMove + " with a total of:" + moveToGoAheadWith.size());
                 BestScore = EvaluateMovePoints(bestMove);
             }
             if(EvaluateMovePoints(bestMove) == BestScore){
                 moveToGoAheadWith.add(bestMove);
-                AIThoughts.add("Ive found a OK move to make with a score("+EvaluateMovePoints(bestMove) +")"+ bestMove.toString() + " with a total of:" + moveToGoAheadWith.size());
+                AIThoughts.add("Ive found a OK move to make with a score("+EvaluateMovePoints(bestMove) +")"+ bestMove + " with a total of:" + moveToGoAheadWith.size());
                 BestScore = EvaluateMovePoints(bestMove);
             }
 
@@ -82,7 +77,7 @@ public class AIController {
     }
 
     private int EvaluateMovePoints(Move moveToTest){
-        int thisScore = 0;
+        int thisScore ;
 
         thisScore = BoardManager.getGameBoard().get(moveToTest.endPosition).pieceOnGrid.type.ordinal()+1;
 

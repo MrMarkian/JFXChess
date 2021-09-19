@@ -26,7 +26,15 @@ public class PGNGame {
 
         public PGNGame(String rawPgn) {
 
-            String[] data = rawPgn.split("\n");
+            parseHeaders(rawPgn);
+
+        }
+        public PGNGame(){
+
+        }
+
+        public void parseHeaders(String inData){
+            String[] data = inData.split("\n");
 
             for (String d : data) {
                 if(d.startsWith("[Event ")) {
@@ -116,11 +124,6 @@ public class PGNGame {
 
                 this.moves = d;
             }
-
-
-        }
-
-        private void parseHeaders(String inData){
 
         }
 
@@ -215,4 +218,37 @@ public class PGNGame {
         public String getLink() {
             return link;
         }
+
+
+    @Override
+    public String toString() {
+        return "PGNGame{" +
+                "event='" + event + '\'' +
+                ", site='" + site + '\'' +
+                ", date='" + date + '\'' +
+                ", round='" + round + '\'' +
+                ", white='" + white + '\'' +
+                ", black='" + black + '\'' +
+                ", result='" + result + '\'' +
+                ", currentPosition='" + currentPosition + '\'' +
+                ", timeZone='" + timeZone + '\'' +
+                ", eco='" + eco + '\'' +
+                ", ecoUrl='" + ecoUrl + '\'' +
+                ", utcDate='" + utcDate + '\'' +
+                ", utcTime='" + utcTime + '\'' +
+                ", whiteElo='" + whiteElo + '\'' +
+                ", blackElo='" + blackElo + '\'' +
+                ", timeControl='" + timeControl + '\'' +
+                ", termination='" + termination + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", link='" + link + '\'' +"}"+ "\n" +
+                "moves='" + moves + '\'';
+
+    }
+
+    public void setMoves(String moves) {
+        this.moves = moves;
+    }
 }

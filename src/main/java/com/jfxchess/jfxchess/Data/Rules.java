@@ -1,7 +1,5 @@
 package com.jfxchess.jfxchess.Data;
 
-import javafx.scene.control.Alert;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +7,14 @@ public class Rules {
 
     private  String failureReason;
 
-    public boolean isMoveValid(Move move, List<ChessGrid> gameBoard, ChessPiece piece){
+    public boolean isMoveValid(Move move, List<ChessGrid> gameBoard){
         boolean moveValid = false;
-        List<Move> allMoves = calculatePossibleMoves(piece,gameBoard,move);
+        List<Move> allMoves = calculatePossibleMoves(gameBoard,move);
+
+        ChessPiece piece = BoardManager.getPieceByPosition(move.startPosition);
 
         if (allMoves.size() <=0){
-            failureReason = new String("No Move available for " + piece.type.toString());
+            failureReason = "No Move available for " + piece.type.toString();
             System.out.println("No moves available");
             return false;
         }
@@ -36,7 +36,6 @@ public class Rules {
         for (Move m: listAllMovesOnBoard(gameBoard)) {
             if(m.isWillResultInCapture()&& m.capturedPiece == ChessPieceTypes.KING){
 
-                    moveValid = false;
                     failureReason = "Check Detected";
                     BoardManager.hal9000.setRunning(false);
                     return false;
@@ -66,28 +65,28 @@ public class Rules {
 
         int counter = 0;
         for (ChessGrid m: gameBoard  ) {
-            allMoves.addAll(calculatePossibleMoves(gameBoard.get(m.location).pieceOnGrid,gameBoard,new Move(m.location)));
+            allMoves.addAll(calculatePossibleMoves(gameBoard,new Move(m.location)));
         }
         return  allMoves;
     }
 
     public boolean isMoveSane(Move move, List<ChessGrid> gameBoard, ChessPiece piece){
         if(gameBoard.get(move.startPosition).pieceOnGrid.type == ChessPieceTypes.NONE){
-            System.out.println("RULE VIOLATION: EMPTY SQUARE ATTEMPTED TO MOVE");
+           // System.out.println("RULE VIOLATION: EMPTY SQUARE ATTEMPTED TO MOVE");
             failureReason = "RULE VIOLATION: EMPTY SQUARE ATTEMPTED TO MOVE";
             return false;
         }
 
         if(move.startPosition < 0 || move.startPosition > 63 || move.endPosition < 0 || move.endPosition > 63){
-            System.out.println("RULE VIOLATION: OUT OF BOUNDS");
+          //  System.out.println("RULE VIOLATION: OUT OF BOUNDS");
             failureReason = "RULE VIOLATION: OUT OF BOUNDS";
             return false;
         }
 
         if(gameBoard.get(move.endPosition).pieceOnGrid.teamColor == gameBoard.get(move.startPosition).pieceOnGrid.teamColor){
-            System.out.println("RULE VIOLATION: SAME TEAM");
+         //   System.out.println("RULE VIOLATION: SAME TEAM");
             failureReason = "RULE VIOLATION: SAME TEAM";
-            System.out.println(move);
+
             return false;
         }
 
@@ -104,7 +103,9 @@ public class Rules {
     }
 
 
-    public List<Move> calculatePossibleMoves(ChessPiece piece, List<ChessGrid> gameBoard, Move StartPosition){
+    public List<Move> calculatePossibleMoves(List<ChessGrid> gameBoard, Move StartPosition){
+
+        ChessPiece piece = BoardManager.getPieceByPosition(StartPosition.startPosition);
 
         List<Move> possibilities = new ArrayList<>();
 
@@ -269,7 +270,7 @@ public class Rules {
             }
             case KNIGHT -> {
 
-                //todo: Some funcky snizzle going on here. fix when awake
+                //todo: Some funky swizzle going on here. fix when awake
 
                 //test L Left top
                 Move testPosition = new Move(StartPosition.startPosition,StartPosition.endPosition);
@@ -307,7 +308,7 @@ public class Rules {
                     possibilities.add(testPosition4);
                 }
 
-                //test L Rught on bottom side
+                //test L Right on bottom side
                 Move testPosition5 = new Move(StartPosition.startPosition,StartPosition.endPosition);
                 testPosition5.setEndPosition(BoardManager.incrementX(testPosition5.startPosition,1));
                 testPosition5.setEndPosition(BoardManager.incrementY(testPosition5.endPosition,2));
@@ -499,7 +500,4 @@ public class Rules {
         }
     }
 
-    public String getFailureReason() {
-        return failureReason;
-    }
 }

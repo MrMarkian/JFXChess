@@ -14,6 +14,13 @@ public class Move {
 
     }
 
+    public Move(String networkText){
+        String[] processedText = networkText.split("!");
+        startPosition = Integer.parseInt(processedText[0]);
+        endPosition = Integer.parseInt(processedText[1]);
+        calculateXY();
+    }
+
     public Move(int StartPosition) {
         this.startPosition = StartPosition;
 
@@ -23,6 +30,10 @@ public class Move {
         this.startPosition = StartPosition;
         this.endPosition = EndPosition;
         calculateXY();
+    }
+
+    public String printNetworkTextValues(){
+        return ""+startPosition+"!"+endPosition;
     }
 
     public int getStartPosition() {

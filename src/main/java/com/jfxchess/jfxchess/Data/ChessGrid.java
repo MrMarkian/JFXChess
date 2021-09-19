@@ -47,7 +47,7 @@ public class ChessGrid {
 
     private GridColor CalculateGridColorFromLocation(int location) {
 
-        int x, y = 0;
+        int x, y;
 
         x = location % 8;
         y = location / 8;
@@ -65,7 +65,7 @@ public class ChessGrid {
 
     @Override
     public String toString() {
-        String pieceString = new String("");
+        String pieceString = "";
         if (pieceOnGrid.teamColor != null)
             pieceString += pieceOnGrid.teamColor;
         if (pieceOnGrid.type != null)
