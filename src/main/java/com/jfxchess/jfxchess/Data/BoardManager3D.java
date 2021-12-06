@@ -2,18 +2,15 @@ package com.jfxchess.jfxchess.Data;
 
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
+import javafx.scene.shape.VertexFormat;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
@@ -79,6 +76,7 @@ public class BoardManager3D extends Stage {
         camera.setTranslateX(0);
         camera.setTranslateY(-0);
         camera.setTranslateZ(0);
+
 
         Group root = new Group();
         root.getChildren().addAll(boardGrid);

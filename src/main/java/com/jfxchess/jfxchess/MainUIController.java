@@ -158,7 +158,6 @@ public class MainUIController {
         tmpMove.setEndPosition(Integer.parseInt(moveEndInputBox.getText()));
         tmpMove.calculateXY();
 
-
             if(client.runClient) {
                 client.SendMove(tmpMove);
             }else if(server.runServer){
@@ -174,14 +173,33 @@ public class MainUIController {
     }
 
     @FXML
+    protected void FlatBeeClicked(){
+        welcomeText.getScene().getStylesheets().clear();
+        welcomeText.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CSS/FlatBee.css")).toExternalForm());
+    }
+
+    @FXML
     protected void DarkModeClicked(){
-        if(DarkModeMenuChecked.isSelected())
+        if(DarkModeMenuChecked.isSelected()) {
+            welcomeText.getScene().getStylesheets().clear();
             welcomeText.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CSS/DarkMode.css")).toExternalForm());
+        }
         else
         {
             welcomeText.getScene().getStylesheets().clear();
         }
     }
+
+
+
+    @FXML
+    protected void SilverModeClicked()
+    {
+        welcomeText.getScene().getStylesheets().clear();
+        welcomeText.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CSS/MistSilverSkin.css")).toExternalForm());
+    }
+
+
 
     @FXML
     protected  void importPNGMenuClick( ) {

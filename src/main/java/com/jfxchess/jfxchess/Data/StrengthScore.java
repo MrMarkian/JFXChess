@@ -20,7 +20,6 @@ public class StrengthScore {
         WhiteTeam = whiteTeam;
     }
 
-
     public String getBlackText(){
         return String.valueOf(BlackTeam);
     }

@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +25,24 @@ public  class BoardManager {
     public static String startPos;
     public static String endPos;
 
-
     public static final List<Rectangle> ImageGridList = new ArrayList<>();
 
     public static double TurnCounter ;
 
-    static final MediaController mediaController = new MediaController();
+    static MediaController mediaController = null;
+
+    static {
+        try {
+            mediaController = new MediaController();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static final List<ChessPiece> capturedPieces = new ArrayList<>();
 
     public static Color whiteSquares;
     public static  Color blackSquares;
-
-
 
 
     public BoardManager() {
@@ -116,8 +124,6 @@ public  class BoardManager {
     public static Pane RenderBoard(int GridSize){
         Pane graphicContext = new Pane();
         Platform.runLater(() -> {
-
-
 
             int xPos=0,yPos=0;
             int currentSquare =0;
