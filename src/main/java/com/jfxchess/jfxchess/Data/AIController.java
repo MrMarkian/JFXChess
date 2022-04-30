@@ -32,7 +32,6 @@ public class AIController {
     }
 
 
-
     private List<Move> gatherAllPossibleResults(List<ChessGrid> gameBoard, ChessTeamColor sideToPlay) {
         List<Move> tmpList = new ArrayList<>();
         int positionCounter = 0;

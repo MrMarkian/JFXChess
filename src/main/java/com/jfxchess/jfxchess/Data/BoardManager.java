@@ -1,6 +1,5 @@
 package com.jfxchess.jfxchess.Data;
 
-
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public  class BoardManager {
+
     static public final List<ChessGrid> gameBoard = new ArrayList<>();
     static ChessTeamColor playerToMoveNext;
 
@@ -42,7 +42,7 @@ public  class BoardManager {
     public static final List<ChessPiece> capturedPieces = new ArrayList<>();
 
     public static Color whiteSquares;
-    public static  Color blackSquares;
+    public static Color blackSquares;
 
 
     public BoardManager() {
@@ -74,7 +74,7 @@ public  class BoardManager {
         System.out.println("Grid ID:" + Position + " Piece:" + gameBoard.get(Position).pieceOnGrid.type.toString() + " Color:" + gameBoard.get(Position).pieceOnGrid.teamColor.toString());
     }
 
-
+    //todo: Should these be here?
     public static int incrementX(int position, int delta){ return position + delta; }
     public static int decrementX(int position,int delta){ return position - delta; }
     public static int incrementY(int position,int delta){
@@ -313,11 +313,23 @@ public  class BoardManager {
         int countPosition =0;
         int emptySquareCount = 0;
 
+
+        class Flusher{
+
+            private static void flushEmpty(StringBuilder input, int emptySquareCount){
+                if(emptySquareCount > 0){
+                    input.append(emptySquareCount);
+                }
+            }
+
+
+        }
+
         for (ChessGrid currentGrid : gameBoard) {
 
              switch (currentGrid.pieceOnGrid.type){
                 case PAWN -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("P");
@@ -325,7 +337,7 @@ public  class BoardManager {
                     }
                 }
                 case BISHOP -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("B");
@@ -334,7 +346,7 @@ public  class BoardManager {
                     }
                 }
                 case ROOK -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("R");
@@ -343,7 +355,7 @@ public  class BoardManager {
                     }
                 }
                 case KNIGHT -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("N");
@@ -352,7 +364,7 @@ public  class BoardManager {
                     }
                 }
                 case QUEEN -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("Q");
@@ -361,7 +373,7 @@ public  class BoardManager {
                     }
                 }
                 case KING -> {
-                    flushEmpty(FENString, emptySquareCount);
+                    Flusher.flushEmpty(FENString, emptySquareCount);
                     emptySquareCount = 0;
                     switch (currentGrid.pieceOnGrid.teamColor){
                         case WHITE -> FENString.append("K");
@@ -375,7 +387,7 @@ public  class BoardManager {
             countPosition++;
 
             if(countPosition % 8 == 0){
-                flushEmpty(FENString, emptySquareCount);
+                Flusher.flushEmpty(FENString, emptySquareCount);
                 emptySquareCount=0;
                 if (countPosition < 63)
                     FENString.append('/');
@@ -390,13 +402,11 @@ public  class BoardManager {
         }
         FENString.append("KQkq - 0 1");
         return FENString.toString();
+
+
     }
 
-    private static void flushEmpty(StringBuilder input, int emptySquareCount){
-        if(emptySquareCount > 0){
-            input.append(emptySquareCount);
-        }
-    }
+
 
     public static void LoadPositionsFromFEN(String inputFEN) {
 

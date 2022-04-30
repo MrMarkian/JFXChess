@@ -2,6 +2,8 @@ package com.jfxchess.jfxchess.Data;
 
 import com.jfxchess.jfxchess.Main;
 import javafx.application.Platform;
+import javafx.scene.control.ListView;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +17,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     public boolean runServer = false;
     ServerSocket serverSocket;
     Socket socket;
+    ListView<String> errorLogger;
 
     public ServerNetworkingController() {
     }

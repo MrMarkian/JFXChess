@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainUIController {
+//region UIElements
     @FXML
     private Label welcomeText;
     @FXML
@@ -73,7 +74,7 @@ public class MainUIController {
     private ListView<String> NetworkingListView;
 
     private final PGNController pgnController = new PGNController();
-
+//endregion
     final ClientNetworkingController client = new ClientNetworkingController();
     ServerNetworkingController server;
 
