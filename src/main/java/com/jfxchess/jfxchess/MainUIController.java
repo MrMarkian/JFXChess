@@ -128,21 +128,24 @@ public class MainUIController {
     }
 
     @FXML
-    protected void StartServer() {
+    protected void StartServer() throws InterruptedException {
 
         Thread runServer = new Thread(server);
         runServer.start();
 
         Main.getMainStage().setTitle("SERVER RUNNING");
+
+        UpdateUI();
     }
 
     @FXML
-    protected void StartClient(){
+    protected void StartClient() throws InterruptedException {
 
         Thread runClient = new Thread(client);
         runClient.start();
-
+        client.uiController = this;
         Main.getMainStage().setTitle("CLIENT RUNNING");
+        UpdateUI();
     }
 
     @FXML
@@ -275,7 +278,7 @@ public class MainUIController {
             moveStartInputBox.setText(BoardManager.startPos);
             moveEndInputBox.setText(BoardManager.endPos);
             moveListView.setItems(FXCollections.observableList(BoardManager.ruleBook.calculatePossibleMoves(BoardManager.gameBoard, new Move(Integer.parseInt(BoardManager.startPos), 0))));
-
+            NetworkingListView.setItems(FXCollections.observableList(NetworkingCommon.networkingLog));
 
             for (Rectangle r : BoardManager.ImageGridList) {
                 r.setStroke(null);

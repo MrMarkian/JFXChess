@@ -61,7 +61,7 @@ public  class BoardManager {
         TurnCounter =0;
         capturedPieces.clear();
         hal9000.AIThoughts.clear();
-        hal9000.setRunning(true);
+       // hal9000.setRunning(true);
     }
 
     public static void printBoard(){
@@ -287,7 +287,7 @@ public  class BoardManager {
         return  graphicContext;
     }
 
-    public static void MovePiece(Move move){
+    public static boolean MovePiece(Move move){
         if (ruleBook.isMoveValid(move, gameBoard)) {
             if(move.isWillResultInCapture()){
                 capturedPieces.add(new ChessPiece(gameBoard.get(move.endPosition).pieceOnGrid.type,gameBoard.get(move.endPosition).pieceOnGrid.teamColor,gameBoard.get(move.endPosition).pieceOnGrid.graphic));
@@ -297,7 +297,8 @@ public  class BoardManager {
             mediaController.chessMoveSound.play();
 
             incrementTurn();
-        }
+            return true;
+        }else return false;
 
     }
 

@@ -17,12 +17,14 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     public boolean runServer = false;
     ServerSocket serverSocket;
     Socket socket;
-    ListView<String> errorLogger;
+
+    boolean logVerbose = true;
 
     public ServerNetworkingController() {
     }
 
 
+//Some validation should happen here in case no one is connected ect.
 
     @Override
     public void run() {
@@ -34,6 +36,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
             serverSocket = new ServerSocket(5000);
             socket = serverSocket.accept();
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            networkingLog.add("Server Instance started @" );
 
             while(runServer) {
                 String inputString = input.readLine();
@@ -56,7 +59,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
                     Move incomingMove = new Move(commandData[1]);
 
-                    System.out.println("SERVER INCOMING MOVE:" + incomingMove);
+                    networkingLog.add("SERVER INCOMING MOVE:" + incomingMove);
 
                     if (BoardManager.ruleBook.isMoveValid(incomingMove, BoardManager.gameBoard)) {
                         BoardManager.MovePiece(incomingMove);
@@ -68,7 +71,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                                 e.printStackTrace();
                             }
                         });
-                        System.out.println("SERVER:: MOVE INSTRUCTION RECEIVED");
+                        networkingLog.add("SERVER:: MOVE INSTRUCTION RECEIVED :: " + incomingMove.toString());
                         SendBoardState();
                     }
                 }
@@ -85,13 +88,14 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
     public void SendBoardState() throws IOException {
         PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        networkingLog.add("SERVER:: Sending Board State :: ");
         output.println("FEN%"+BoardManager.SavePositionToFEN());
     }
 
     @Override
     public void SendMove(Move moveToSend) throws IOException {
-        if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {
-            BoardManager.MovePiece(moveToSend);
+        networkingLog.add("SERVER:: Sending Move :: " + moveToSend.toString());
+        if(BoardManager.MovePiece(moveToSend)){
             SendFENString(BoardManager.SavePositionToFEN());
         }
 

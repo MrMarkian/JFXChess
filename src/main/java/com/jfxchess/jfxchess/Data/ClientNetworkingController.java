@@ -1,5 +1,7 @@
 package com.jfxchess.jfxchess.Data;
 
+import com.jfxchess.jfxchess.Main;
+import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
 
 import java.io.BufferedReader;
@@ -15,6 +17,9 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     public boolean runClient = false;
     Socket socket;
+    String hostIp = "localhost";
+    int port = 5000;
+    public MainUIController uiController;
 
     @Override
     public void run() {
@@ -23,10 +28,10 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
         this.setDaemon(true);
 
         try{
-            socket = new Socket("localhost", 5000);
+            socket = new Socket(hostIp, port);
             BufferedReader incomingData = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter outgoingData = new PrintWriter(socket.getOutputStream(), true);
-
+            networkingLog.add("CLIENT::Client Instance Started" + hostIp + " Port: " + port);
             Scanner scanner = new Scanner(System.in);
             String echoString;
             String response;
@@ -34,28 +39,37 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
             do {
                 response = incomingData.readLine();
-                System.out.println("Full String Recieved: " + response);
+                System.out.println("Full String Received: " + response);
 
                 String[] parseDataStream = response.split("%");
                 if( parseDataStream.length > 1){
-                    System.out.println("Command Found! " + parseDataStream[0]);
+                    System.out.println("CLIENT::Command Found! " + parseDataStream[0]);
                     parseCommand(parseDataStream);
                 }
             } while(runClient);
 
             socket.close();
         } catch (IOException e) {
-            System.out.println("Client Error: " + e.getMessage());
+            networkingLog.add("Client Error: " + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
-    private void parseCommand(String[] parseDataStream) {
+    private void parseCommand(String[] parseDataStream) throws InterruptedException {
 
         switch (parseDataStream[0]){
             case "FEN":{
-                System.out.println("FEN Received!:-" + parseDataStream[1]);
+                networkingLog.add("CLIENT::FEN Received!:-" + parseDataStream[1]);
                 Platform.runLater(() -> BoardManager.LoadPositionsFromFEN(parseDataStream[1]));
+                Platform.runLater(()-> {
+                    try {
+                        uiController.UpdateUI();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
                 break;
             }
             case "EXIT":{
@@ -64,15 +78,29 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
             }
             case "NEW":{
                 BoardManager.SetupNewStandardBoard();
+                Platform.runLater(()-> {
+                    try {
+                        uiController.UpdateUI();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
                 break;
             }
             case "MOVE":{
+                networkingLog.add("CLIENT::MOVE::" + parseDataStream[1]);
                 ReceiveMove(new Move(parseDataStream[1]));
-
+                Platform.runLater(()-> {
+                    try {
+                        uiController.UpdateUI();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
                 break;
             }
             default:{
-                System.out.println("UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
+                networkingLog.add("CLIENT::UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
             }
 
         }
@@ -82,8 +110,8 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     public void SendMove(Move moveToSend) throws IOException {
         if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("MOVE%" + moveToSend.printNetworkTextValues());
-            System.out.println("CLIENT: MOVE SENT");
+            networkingLog.add("MOVE%" + moveToSend.printNetworkTextValues());
+            networkingLog.add("CLIENT: MOVE SENT");
         }
     }
 

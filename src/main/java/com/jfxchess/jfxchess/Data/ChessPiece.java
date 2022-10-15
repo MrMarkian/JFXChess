@@ -26,7 +26,6 @@ public class ChessPiece {
 
     public ChessPiece(){
         this.type = ChessPieceTypes.NONE;
-
     }
 
     public ImagePattern getGraphic() {
