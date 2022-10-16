@@ -12,5 +12,7 @@ public interface NetworkingCommon {
      void ReceiveMove(Move receivedMove);
      void QuitNetworking();
      List<String> PrintLog();
+     boolean SendMessage(String message) throws IOException;
+     void ReceiveMessage(String message);
 
 }

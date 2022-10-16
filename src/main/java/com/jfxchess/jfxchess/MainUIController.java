@@ -4,6 +4,8 @@ import com.jfxchess.jfxchess.Data.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -15,7 +17,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MainUIController {
@@ -40,6 +46,10 @@ public class MainUIController {
     private ListView<String> moveHistoryListView;
     @FXML
     private ListView<String> AIThoughtsView;
+    @FXML
+    private TextField textEntry;
+    @FXML
+    private ListView<String> chatHistory;
     @FXML
     private CheckMenuItem AIMenuEnabled;
     @FXML
@@ -130,9 +140,12 @@ public class MainUIController {
     @FXML
     protected void StartServer() throws InterruptedException {
 
+         if (BoardManager.gameBoard.isEmpty()){
+            newGameClicked();
+         }
         Thread runServer = new Thread(server);
         runServer.start();
-
+        server.uiController = this;
         Main.getMainStage().setTitle("SERVER RUNNING");
 
         UpdateUI();
@@ -140,12 +153,40 @@ public class MainUIController {
 
     @FXML
     protected void StartClient() throws InterruptedException {
-
+        if (BoardManager.gameBoard.isEmpty()){
+            newGameClicked();
+        }
         Thread runClient = new Thread(client);
         runClient.start();
         client.uiController = this;
+
         Main.getMainStage().setTitle("CLIENT RUNNING");
         UpdateUI();
+    }
+
+    @FXML
+    protected void sendChatMessage() throws IOException {
+
+        String txtToSend = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
+        txtToSend += " //  " + textEntry.getText();
+
+        if (server.runServer){
+            server.SendMessage(txtToSend);
+
+
+        }else if(client.runClient){
+            client.SendMessage(txtToSend);
+
+        }
+        chatHistory.getItems().add(txtToSend);
+        textEntry.clear();
+
+    }
+
+    public void addChatMessage(String message){
+
+            chatHistory.getItems().add(message);
+
     }
 
     @FXML
@@ -223,6 +264,24 @@ public class MainUIController {
     protected void RenderFXGLView(){
         BoardRenderFXGL fxgl3DView = new BoardRenderFXGL();
 
+
+    }
+
+    @FXML
+    protected void ShowNetworkWindow() throws IOException {
+        NetworkWindow networkWindow = new NetworkWindow();
+
+        Stage dialog = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("NetworkWindow.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 500, 200);
+        dialog.setTitle("Network Multiplayer");
+        dialog.setScene(scene);
+        dialog.initOwner(Main.getMainStage());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+
+        dialog.showAndWait();
+
+// process result of dialog operation.
 
     }
 
@@ -353,11 +412,11 @@ public class MainUIController {
         TurnCountLabel.setText("Turn Count:" + (int) BoardManager.TurnCounter);
 
 
-            XYChart.Series set1 = new XYChart.Series();
+/*            XYChart.Series set1 = new XYChart.Series();
 
             set1.getData().add(new XYChart.Data("White",score.getWhiteTeam()));
             set1.getData().add(new XYChart.Data("Black",score.getBlackTeam()));
-            StatsBarChart.getData().addAll(set1);
+            StatsBarChart.getData().addAll(set1);*/
 
         if(AIMenuEnabled.isSelected()){
 
@@ -388,14 +447,20 @@ public class MainUIController {
     }
 
     private void RenderBoardinWindow(){
-        BoardRenderPane.getChildren().clear();
-        BoardRenderPane.getChildren().add(BoardManager.RenderBoard((int) Math.round(gridSizeSlider.getValue())));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                BoardRenderPane.getChildren().clear();
+                BoardRenderPane.getChildren().add(BoardManager.RenderBoard((int) Math.round(gridSizeSlider.getValue())));
 
-        BoardRenderPane.setLayoutX(BoardRenderPane.getBoundsInParent().getCenterX() - (BoardRenderPane.getWidth()/2));
-        BoardRenderPane.setLayoutY(BoardRenderPane.getBoundsInParent().getCenterY() - (BoardRenderPane.getHeight()/2));
+                BoardRenderPane.setLayoutX(BoardRenderPane.getBoundsInParent().getCenterX() - (BoardRenderPane.getWidth()/2));
+                BoardRenderPane.setLayoutY(BoardRenderPane.getBoundsInParent().getCenterY() - (BoardRenderPane.getHeight()/2));
 
-        captureRenderer.getChildren().clear();
-        captureRenderer.getChildren().add(BoardManager.RenderCapturedPieces(50));
+                captureRenderer.getChildren().clear();
+                captureRenderer.getChildren().add(BoardManager.RenderCapturedPieces(50));
+            }
+        });
+
 
     }
 }

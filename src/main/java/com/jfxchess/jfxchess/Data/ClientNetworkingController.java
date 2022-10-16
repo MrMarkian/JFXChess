@@ -45,6 +45,13 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 if( parseDataStream.length > 1){
                     System.out.println("CLIENT::Command Found! " + parseDataStream[0]);
                     parseCommand(parseDataStream);
+                    Platform.runLater(()-> {
+                        try {
+                            uiController.UpdateUI();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             } while(runClient);
 
@@ -99,6 +106,19 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 });
                 break;
             }
+            case "MESSAGE":{
+                networkingLog.add("Message Recieved: " );
+                Platform.runLater(()-> {
+                    try {
+                        uiController.addChatMessage(parseDataStream[1]);
+                        uiController.UpdateUI();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                break;
+
+            }
             default:{
                 networkingLog.add("CLIENT::UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
             }
@@ -110,8 +130,10 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     public void SendMove(Move moveToSend) throws IOException {
         if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            output.println("MOVE%" + moveToSend.printNetworkTextValues());
             networkingLog.add("MOVE%" + moveToSend.printNetworkTextValues());
             networkingLog.add("CLIENT: MOVE SENT");
+
         }
     }
 
@@ -134,6 +156,19 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     public List<String> PrintLog() {
         List<String> logs = new ArrayList<>(NetworkingCommon.networkingLog);
         return logs;
+    }
+
+    @Override
+    public boolean SendMessage(String message) throws IOException {
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        output.println("MESSAGE%" + message);
+
+        return false;
+    }
+
+    @Override
+    public void ReceiveMessage(String message) {
+
     }
 
 }

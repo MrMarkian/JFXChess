@@ -101,15 +101,17 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move {" +
-                ChessGrid.getLabelFromInt(startPosition).toString() + " - " + ChessGrid.getLabelFromInt(endPosition) + "} " +
-                "startPosition=" + startPosition +
-                ", endPosition=" + endPosition +
-                ", startX=" + startX +
-                ", startY=" + startY +
-                ", endX=" + endX +
-                ", endY=" + endY +
-                ", Capture=" + willResultInCapture +
-                ", capturedPiece=" + capturedPiece;
+        String tmpString =
+         "Move {" +
+                ChessGrid.getLabelFromInt(startPosition).toString() + " - " + ChessGrid.getLabelFromInt(endPosition) + "} ";
+              //  ", startX=" + startX +
+              //  ", startY=" + startY +
+              //  ", endX=" + endX +
+              //  ", endY=" + endY +
+                if(willResultInCapture) {
+                    tmpString = tmpString +
+                    " Capture=" + capturedPiece;
+                }
+                return tmpString;
     }
 }

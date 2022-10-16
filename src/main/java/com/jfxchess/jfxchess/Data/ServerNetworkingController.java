@@ -1,8 +1,7 @@
 package com.jfxchess.jfxchess.Data;
 
-import com.jfxchess.jfxchess.Main;
+import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
-import javafx.scene.control.ListView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +16,9 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     public boolean runServer = false;
     ServerSocket serverSocket;
     Socket socket;
+    public MainUIController uiController;
+    private Player localPlayer, remotePlayer;
+
 
     boolean logVerbose = true;
 
@@ -38,10 +40,13 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             networkingLog.add("Server Instance started @" );
 
+
+
             while(runServer) {
                 String inputString = input.readLine();
                 System.out.println(inputString);
                 ProcessIncomingData(inputString);
+                UpdateUI();
             }
 
             socket.close();
@@ -64,26 +69,61 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                     if (BoardManager.ruleBook.isMoveValid(incomingMove, BoardManager.gameBoard)) {
                         BoardManager.MovePiece(incomingMove);
 
-                        Platform.runLater(() -> {
-                            try {
-                                Main.getMainUIController().UpdateUI();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        });
                         networkingLog.add("SERVER:: MOVE INSTRUCTION RECEIVED :: " + incomingMove.toString());
                         SendBoardState();
+                        Platform.runLater(()-> {
+                            try {
+
+                                uiController.UpdateUI();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
                     }
                 }
+
                 case "BOARD" -> {
                     try {
                         SendBoardState();
+                        Platform.runLater(()-> {
+                            try {
+
+                                uiController.UpdateUI();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+
+                case "MESSAGE" -> {
+                    networkingLog.add("Message Recieved: " );
+                    Platform.runLater(()-> {
+                        try {
+                            uiController.addChatMessage(commandData[1]);
+                            uiController.UpdateUI();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+
+
             }
+
         }
+    }
+
+    private void UpdateUI(){
+        Platform.runLater(() -> {
+            try {
+                uiController.UpdateUI();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void SendBoardState() throws IOException {
@@ -123,8 +163,21 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
         return null;
     }
 
+    @Override
+    public boolean SendMessage(String message) throws IOException {
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        output.println("MESSAGE%" + message);
+        return false;
+    }
+
+    @Override
+    public void ReceiveMessage(String message) {
+
+    }
+
     public void SendFENString (String FENString) throws IOException {
         PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
         output.println("FEN%" + FENString);
+        networkingLog.add("SERVER:: Sending FEN String :: " + FENString);
     }
 }

@@ -31,7 +31,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="659.0" prefWidth="929.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
+<VBox prefHeight="659.0" prefWidth="929.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <items>
@@ -64,6 +64,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Multiplayer">
             <items>
+            <MenuItem mnemonicParsing="false" onAction="#ShowNetworkWindow" text="Show Network Window" />
                 <MenuItem mnemonicParsing="false" onAction="#StartServer" text="Start Server" />
                 <MenuItem mnemonicParsing="false" onAction="#StartClient" text="Start Client" />
                 <MenuItem mnemonicParsing="false" onAction="#SendBoardStateClicked" text="SendBoardState" />
@@ -306,11 +307,38 @@
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane animated="false" text="Networking">
+                            <TitledPane animated="false" prefHeight="272.0" prefWidth="333.0" text="Networking" VBox.vgrow="ALWAYS">
                                 <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                         <children>
-                                            <ListView fx:id="NetworkingListView" layoutX="38.0" layoutY="31.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 <TabPane prefHeight="200.0" prefWidth="333.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="1.2" AnchorPane.leftAnchor="1.2" AnchorPane.rightAnchor="1.2" AnchorPane.topAnchor="1.2">
+                                   <tabs>
+                                     <Tab text="Chat">
+                                       <content>
+                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                <children>
+                                                   <VBox layoutX="4.0" layoutY="4.0" prefHeight="192.0" prefWidth="301.0">
+                                                      <children>
+                                                         <ListView fx:id="chatHistory" prefHeight="200.0" prefWidth="200.0" />
+                                                         <TextField fx:id="textEntry" prefHeight="52.0" prefWidth="301.0" />
+                                                         <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendChatMessage" prefHeight="25.0" prefWidth="123.0" text="Send" />
+                                                      </children>
+                                                   </VBox>
+                                                </children>
+                                             </AnchorPane>
+                                       </content>
+                                     </Tab>
+                                     <Tab text="Logs">
+                                       <content>
+                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                <children>
+                                                              <ListView fx:id="NetworkingListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                </children>
+                                             </AnchorPane>
+                                       </content>
+                                     </Tab>
+                                   </tabs>
+                                 </TabPane>
                                         </children>
                                     </AnchorPane>
                                 </content>
