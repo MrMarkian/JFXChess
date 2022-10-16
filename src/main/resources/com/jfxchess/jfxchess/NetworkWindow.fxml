@@ -20,7 +20,7 @@
                         <Button fx:id="hostButton" layoutX="145.0" layoutY="60.0" mnemonicParsing="false" onAction="#hostButtonClick" prefHeight="35.0" prefWidth="212.0" text="Host" />
                         <Pane layoutX="17.0" layoutY="51.0" prefHeight="52.0" prefWidth="120.0">
                            <children>
-                              <ComboBox fx:id="hostColor" layoutX="11.0" layoutY="14.0" prefHeight="25.0" prefWidth="99.0" promptText="Choose" />
+                              <ComboBox fx:id="hostColor" layoutX="11.0" layoutY="14.0" prefHeight="25.0" prefWidth="99.0" promptText="Choose" visibleRowCount="2" />
                            </children>
                         </Pane>
                         <TextField fx:id="hostname" layoutX="63.0" layoutY="13.0" prefHeight="25.0" prefWidth="288.0" />

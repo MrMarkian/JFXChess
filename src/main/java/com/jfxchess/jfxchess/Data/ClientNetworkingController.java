@@ -136,7 +136,7 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     public void SendMove(Move moveToSend) throws IOException {
 
         if(BoardManager.playerToMoveNext != me.COLOR){
-            return;
+            System.out.println("CLIENT:: Incorrect Team Color");
         }
 
         if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {

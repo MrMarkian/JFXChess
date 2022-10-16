@@ -15,33 +15,24 @@ public class NetworkWindow extends Application {
 
         @FXML
         private Button ConnectButton;
-
         @FXML
         private TextField address;
-
         @FXML
         private TextField hostname;
         @FXML
         private TextField clientname;
-
         @FXML
         private RadioButton black;
-
         @FXML
         private CheckBox enablePassword;
-
         @FXML
         private Button hostButton;
-
         @FXML
         private PasswordField password;
-
         @FXML
         private PasswordField srvPassword;
-
         @FXML
         private RadioButton white;
-
         @FXML
         private ComboBox<ChessTeamColor> hostColor ;
 
@@ -64,7 +55,6 @@ public class NetworkWindow extends Application {
                 Stage stage = (Stage) hostButton.getScene().getWindow();
                 MainUi.StartServer(MainUi.me);
                 stage.close();
-
         }
 
         @Override

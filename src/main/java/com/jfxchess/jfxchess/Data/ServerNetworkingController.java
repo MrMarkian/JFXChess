@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
+
 public class ServerNetworkingController extends Thread implements NetworkingCommon{
 
     public boolean runServer = false;
@@ -41,8 +42,6 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
             networkingLog.add("Server Instance started @" );
 
             //check password:
-
-
             while(runServer) {
                 String inputString = input.readLine();
                 System.out.println(inputString);
@@ -122,8 +121,6 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
                     output.println("SETCOLOR%" + colortext );
                 }
-
-
             }
 
         }
@@ -148,7 +145,8 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     @Override
     public void SendMove(Move moveToSend) throws IOException {
         if(BoardManager.playerToMoveNext != localPlayer.COLOR){
-            return;
+            System.out.println("Wrong team color! - Ignoring Move.");
+
         }
         networkingLog.add("SERVER:: Sending Move :: " + moveToSend.toString());
         if(BoardManager.MovePiece(moveToSend)){

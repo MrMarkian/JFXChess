@@ -113,7 +113,6 @@ public class MainUIController {
 //endregion
     final ClientNetworkingController client = new ClientNetworkingController();
     ServerNetworkingController server;
-
     {
         server = new ServerNetworkingController();
     }
@@ -304,12 +303,12 @@ public class MainUIController {
 
         Stage dialog = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("NetworkWindow.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 500, 200);
+        Scene scene = new Scene(fxmlLoader.load(), 370, 150);
         dialog.setTitle("Network Multiplayer");
         dialog.setScene(scene);
         dialog.initOwner(Main.getMainStage());
         dialog.initModality(Modality.APPLICATION_MODAL);
-
+        dialog.setResizable(false);
         dialog.showAndWait();
 
 // process result of dialog operation.
@@ -367,7 +366,7 @@ public class MainUIController {
 
             moveStartInputBox.setText(BoardManager.startPos);
             moveEndInputBox.setText(BoardManager.endPos);
-            moveListView.setItems(FXCollections.observableList(BoardManager.ruleBook.calculatePossibleMoves(BoardManager.gameBoard, new Move(Integer.parseInt(BoardManager.startPos), 0))));
+            moveListView.setItems(FXCollections.observableList(BoardManager.ruleBook.calculatePossibleMoves(BoardManager.gameBoard, new Move(Integer. parseInt(BoardManager.startPos), 0))));
             NetworkingListView.setItems(FXCollections.observableList(NetworkingCommon.networkingLog));
 
             for (Rectangle r : BoardManager.ImageGridList) {
