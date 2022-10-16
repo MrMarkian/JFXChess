@@ -17,8 +17,8 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     ServerSocket serverSocket;
     Socket socket;
     public MainUIController uiController;
-    private Player localPlayer, remotePlayer;
-
+    public Player localPlayer, remotePlayer;
+    public boolean passEnabled = false;
 
     boolean logVerbose = true;
 
@@ -40,6 +40,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             networkingLog.add("Server Instance started @" );
 
+            //check password:
 
 
             while(runServer) {
@@ -110,6 +111,18 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                     });
                 }
 
+                case "COLOR"->{
+                    networkingLog.add("Color Request: " );
+                    PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+                    String colortext = null;
+                    if (localPlayer.COLOR == ChessTeamColor.BLACK)
+                        colortext = ChessTeamColor.WHITE.toString();
+                    if (localPlayer.COLOR == ChessTeamColor.WHITE)
+                        colortext = ChessTeamColor.BLACK.toString();
+
+                    output.println("SETCOLOR%" + colortext );
+                }
+
 
             }
 
@@ -134,6 +147,9 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
     @Override
     public void SendMove(Move moveToSend) throws IOException {
+        if(BoardManager.playerToMoveNext != localPlayer.COLOR){
+            return;
+        }
         networkingLog.add("SERVER:: Sending Move :: " + moveToSend.toString());
         if(BoardManager.MovePiece(moveToSend)){
             SendFENString(BoardManager.SavePositionToFEN());

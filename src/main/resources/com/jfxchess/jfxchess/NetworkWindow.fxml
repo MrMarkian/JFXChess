@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-
-<AnchorPane prefHeight="196.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.NetworkWindow">
+<AnchorPane prefHeight="153.0" prefWidth="387.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.NetworkWindow">
    <children>
-      <TabPane layoutX="-2.0" prefHeight="218.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="-2.0" maxHeight="200.0" maxWidth="600.0" minHeight="149.0" minWidth="389.0" prefHeight="149.0" prefWidth="389.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Host Game">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="281.0" prefWidth="600.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="389.0">
                      <children>
-                        <Button fx:id="hostButton" layoutX="341.0" layoutY="101.0" mnemonicParsing="false" onAction="#hostButtonClick" prefHeight="25.0" prefWidth="138.0" text="Host" />
-                        <PasswordField fx:id="srvPassword" layoutX="343.0" layoutY="58.0" prefHeight="25.0" prefWidth="223.0" />
-                        <Pane layoutX="28.0" layoutY="27.0" prefHeight="86.0" prefWidth="120.0">
+                        <Button fx:id="hostButton" layoutX="145.0" layoutY="60.0" mnemonicParsing="false" onAction="#hostButtonClick" prefHeight="35.0" prefWidth="212.0" text="Host" />
+                        <Pane layoutX="17.0" layoutY="51.0" prefHeight="52.0" prefWidth="120.0">
                            <children>
-                              <RadioButton fx:id="white" layoutX="10.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="118.0" text="Play As White" />
-                              <RadioButton fx:id="black" layoutX="10.0" layoutY="51.0" mnemonicParsing="false" text="Play as Black" />
+                              <ComboBox fx:id="hostColor" layoutX="11.0" layoutY="14.0" prefHeight="25.0" prefWidth="99.0" promptText="Choose" />
                            </children>
                         </Pane>
-                        <CheckBox fx:id="enablePassword" layoutX="341.0" layoutY="27.0" mnemonicParsing="false" text="Password Protect" />
+                        <TextField fx:id="hostname" layoutX="63.0" layoutY="13.0" prefHeight="25.0" prefWidth="288.0" />
+                        <Label layoutX="14.0" layoutY="17.0" prefHeight="17.0" prefWidth="63.0" text="Name" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
           <Tab text="Join Game">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="117.0" prefWidth="389.0">
                      <children>
-                        <TextField fx:id="address" layoutX="127.0" layoutY="20.0" prefHeight="25.0" prefWidth="293.0" />
-                        <Label layoutX="21.0" layoutY="24.0" text="Server Address:" />
-                        <PasswordField fx:id="password" layoutX="127.0" layoutY="56.0" />
-                        <Label layoutX="50.0" layoutY="60.0" text="Password:" />
-                        <Button fx:id="ConnectButton" layoutX="300.0" layoutY="56.0" mnemonicParsing="false" onAction="#ConnectToServerClick" prefHeight="25.0" prefWidth="120.0" text="Connect" />
+                        <TextField fx:id="address" layoutX="97.0" layoutY="49.0" prefHeight="25.0" prefWidth="260.0" promptText="Computer To Connect to" text="localhost" />
+                        <Label layoutX="15.0" layoutY="53.0" text="Server Address:" />
+                        <Button fx:id="ConnectButton" layoutX="273.0" layoutY="86.0" mnemonicParsing="false" onAction="#ConnectToServerClick" prefHeight="25.0" prefWidth="84.0" text="Connect" />
+                        <TextField fx:id="clientname" layoutX="96.0" layoutY="13.0" prefHeight="25.0" prefWidth="261.0" promptText="Your Username" />
+                        <Label layoutX="24.0" layoutY="17.0" prefHeight="17.0" prefWidth="63.0" text="Name" />
                      </children>
                   </AnchorPane>
             </content>

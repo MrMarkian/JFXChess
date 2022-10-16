@@ -57,6 +57,12 @@ public class MainUIController {
     @FXML
     private CheckMenuItem BlackAI;
     @FXML
+    private CheckMenuItem viewAi;
+    @FXML
+    private CheckMenuItem ViewMisc;
+    @FXML
+    private CheckMenuItem viewNetworking;
+    @FXML
     private CheckBox AIEnabledCheckBox;
     @FXML
     private CheckBox AIPlayWhiteCheckbox;
@@ -68,6 +74,8 @@ public class MainUIController {
     private Label WhiteScoreLabel;
     @FXML
     private Label TurnCountLabel;
+    @FXML
+    private Label Namelabel;
     @FXML
     private BarChart StatsBarChart ;
     @FXML
@@ -83,6 +91,24 @@ public class MainUIController {
     @FXML
     private ListView<String> NetworkingListView;
 
+    //TABS:
+
+    @FXML
+    private TitledPane GameStatusTab;
+    @FXML
+    private TitledPane FENMngTab;
+    @FXML
+    private TitledPane AIControlTab;
+    @FXML
+    private TitledPane ManualMoveTab;
+    @FXML
+    private TitledPane PossibleMovesTab;
+    @FXML
+    private TitledPane MoveHistoryTab;
+    @FXML
+    private TitledPane AIThboughtsTab;
+
+
     private final PGNController pgnController = new PGNController();
 //endregion
     final ClientNetworkingController client = new ClientNetworkingController();
@@ -92,11 +118,14 @@ public class MainUIController {
         server = new ServerNetworkingController();
     }
 
+    public Player me;
 
     @FXML
     protected void newGameClicked() throws InterruptedException {
         BoardManager.gameBoard.clear();
         BoardManager.SetupNewStandardBoard();
+        BoardManager.startPos = "0";
+        BoardManager.endPos = "0";
         BoardManager.LoadPositionsFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         AIThoughtsView.getItems().clear();
         moveHistoryListView.getItems().clear();
@@ -138,24 +167,27 @@ public class MainUIController {
     }
 
     @FXML
-    protected void StartServer() throws InterruptedException {
-
+    protected void StartServer(Player cli) throws InterruptedException {
+        Namelabel.setText(cli.Name);
          if (BoardManager.gameBoard.isEmpty()){
             newGameClicked();
          }
         Thread runServer = new Thread(server);
         runServer.start();
         server.uiController = this;
+        server.localPlayer = cli;
         Main.getMainStage().setTitle("SERVER RUNNING");
 
         UpdateUI();
     }
 
     @FXML
-    protected void StartClient() throws InterruptedException {
+    protected void StartClient(Player cli) throws InterruptedException, IOException {
         if (BoardManager.gameBoard.isEmpty()){
             newGameClicked();
         }
+        client.me = cli;
+        Namelabel.setText(cli.Name);
         Thread runClient = new Thread(client);
         runClient.start();
         client.uiController = this;
@@ -165,28 +197,27 @@ public class MainUIController {
     }
 
     @FXML
+    protected void changePanes(){
+        AIControlTab.setDisable(true);
+    }
+
+    @FXML
     protected void sendChatMessage() throws IOException {
 
-        String txtToSend = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
-        txtToSend += " //  " + textEntry.getText();
+        String txtToSend = me.Name + " / " + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " / " + textEntry.getText();
 
         if (server.runServer){
             server.SendMessage(txtToSend);
-
-
         }else if(client.runClient){
             client.SendMessage(txtToSend);
-
         }
+
         chatHistory.getItems().add(txtToSend);
         textEntry.clear();
-
     }
 
     public void addChatMessage(String message){
-
             chatHistory.getItems().add(message);
-
     }
 
     @FXML

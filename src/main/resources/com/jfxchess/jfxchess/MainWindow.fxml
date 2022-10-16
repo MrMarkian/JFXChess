@@ -22,10 +22,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
@@ -65,9 +63,6 @@
         <Menu mnemonicParsing="false" text="Multiplayer">
             <items>
             <MenuItem mnemonicParsing="false" onAction="#ShowNetworkWindow" text="Show Network Window" />
-                <MenuItem mnemonicParsing="false" onAction="#StartServer" text="Start Server" />
-                <MenuItem mnemonicParsing="false" onAction="#StartClient" text="Start Client" />
-                <MenuItem mnemonicParsing="false" onAction="#SendBoardStateClicked" text="SendBoardState" />
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Theme">
@@ -87,6 +82,13 @@
                 </Menu>
             </items>
         </Menu>
+      <Menu mnemonicParsing="false" text="View">
+         <items>
+            <CheckMenuItem fx:id="viewAi" mnemonicParsing="false" onAction="#changePanes" selected="true" text="AI Windows" />
+            <CheckMenuItem fx:id="ViewMisc" mnemonicParsing="false" selected="true" text="Misc" />
+            <CheckMenuItem fx:id="viewNetworking" mnemonicParsing="false" selected="true" text="Networking" />
+         </items>
+      </Menu>
         <Menu mnemonicParsing="false" text="3D Board">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#Show3DWindow" text="Show Window" />
@@ -105,11 +107,11 @@
                 <AnchorPane>
                     <children>
                         <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <TitledPane animated="false" expanded="false" text="Game Status">
+                            <TitledPane fx:id="GameStatusTab" animated="false" collapsible="false" prefHeight="241.0" prefWidth="333.0" text="Game Status">
                                 <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <AnchorPane minHeight="80.0" minWidth="80.0" prefHeight="135.0" prefWidth="331.0">
                                         <children>
-                                            <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <VBox fillWidth="false" layoutX="8.0" layoutY="9.0" prefHeight="110.0" prefWidth="312.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
 
                                                     <Label fx:id="welcomeText" text="JFXChess V1.0">
@@ -127,39 +129,23 @@
                                                             <Font name="Tahoma Bold" size="18.0" />
                                                         </font>
                                                     </Label>
-                                                    <Label fx:id="WhiteScoreLabel" layoutX="10.0" layoutY="33.0" text="Whte Score:">
+                                                    <Label fx:id="WhiteScoreLabel" layoutX="10.0" layoutY="33.0" text="White Score:">
                                                         <font>
                                                             <Font name="Tahoma Bold" size="18.0" />
                                                         </font>
                                                     </Label>
+                                       <Label fx:id="Namelabel" text="Name:">
+                                          <font>
+                                             <Font name="System Bold" size="22.0" />
+                                          </font>
+                                       </Label>
                                                 </children>
                                             </VBox>
                                         </children>
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane expanded="false" text="FEN String Managment">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <GridPane layoutX="19.6" layoutY="60.6" prefWidth="320.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="281.0" minWidth="10.0" prefWidth="281.0" />
-                                                </columnConstraints>
-                                                <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                </rowConstraints>
-                                                <children>
-                                                    <Button onAction="#onHelloButtonClick" text="Load FEN" />
-                                                    <TextField fx:id="FENInputBox" prefHeight="25.0" prefWidth="155.0" promptText="Enter FEN String" GridPane.rowIndex="1" />
-                                                </children>
-                                            </GridPane>
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane expanded="false" text="AI Control">
+                            <TitledPane fx:id="AIControlTab" expanded="false" text="AI Control">
                                 <content>
                                     <AnchorPane>
                                         <children>
@@ -171,31 +157,49 @@
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane expanded="false" text="Manual Move Control">
+                            <TitledPane fx:id="AIThboughtsTab" expanded="false" text="AI Thoughts">
                                 <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <AnchorPane>
                                         <children>
-                                            <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                </columnConstraints>
-                                                <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                </rowConstraints>
-                                                <children>
-                                                    <Button fx:id="MoveButton" mnemonicParsing="false" onAction="#MoveButtonClick" text="Move" GridPane.rowIndex="2" />
-                                                    <TextField fx:id="moveEndInputBox" promptText="Move End" GridPane.rowIndex="1" />
-                                                    <TextField fx:id="moveStartInputBox" promptText="Move Start" />
-                                                </children>
-                                            </GridPane>
+                                            <ListView fx:id="AIThoughtsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                         </children>
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane expanded="false" text="Possible Moves">
+                            <TitledPane fx:id="ManualMoveTab" expanded="false" text="Manual Move Control">
+                                <content>
+                                    <AnchorPane prefHeight="173.0" prefWidth="331.0">
+                                        <children>
+                                 <VBox layoutX="18.6" layoutY="19.6" prefHeight="166.0" prefWidth="312.0" AnchorPane.bottomAnchor="38.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                    <children>
+                                       <HBox>
+                                          <children>
+                                                          <TextField fx:id="moveStartInputBox" prefHeight="25.0" prefWidth="143.0" promptText="Move Start" />
+                                                          <TextField fx:id="moveEndInputBox" prefHeight="25.0" prefWidth="104.0" promptText="Move End" />
+                                                          <Button fx:id="MoveButton" mnemonicParsing="false" onAction="#MoveButtonClick" prefHeight="25.0" prefWidth="65.0" text="Move" HBox.hgrow="ALWAYS" />
+                                          </children>
+                                       </HBox>
+                                              <TitledPane fx:id="FENMngTab" expanded="false" text="FEN String Managment">
+                                                  <content>
+                                                      <AnchorPane prefHeight="61.0" prefWidth="291.0">
+                                                          <children>
+                                                   <VBox prefHeight="51.0" prefWidth="245.0">
+                                                      <children>
+                                                                      <Button onAction="#onHelloButtonClick" text="Load FEN" />
+                                                                      <TextField fx:id="FENInputBox" prefHeight="25.0" prefWidth="181.0" promptText="Enter FEN String" />
+                                                      </children>
+                                                   </VBox>
+                                                          </children>
+                                                      </AnchorPane>
+                                                  </content>
+                                              </TitledPane>
+                                    </children>
+                                 </VBox>
+                                        </children>
+                                    </AnchorPane>
+                                </content>
+                            </TitledPane>
+                            <TitledPane fx:id="PossibleMovesTab" expanded="false" text="Possible Moves">
                                 <content>
                                     <AnchorPane>
                                         <children>
@@ -204,7 +208,7 @@
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane expanded="false" text="Move History">
+                            <TitledPane fx:id="MoveHistoryTab" expanded="false" text="Move History">
                                 <content>
                                     <AnchorPane>
                                         <children>
@@ -218,15 +222,6 @@
                                                     <ListView fx:id="moveHistoryListView" />
                                                 </children>
                                             </VBox>
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane expanded="false" text="AI Thoughts">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <ListView fx:id="AIThoughtsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                         </children>
                                     </AnchorPane>
                                 </content>
@@ -307,21 +302,25 @@
                                     </AnchorPane>
                                 </content>
                             </TitledPane>
-                            <TitledPane animated="false" prefHeight="272.0" prefWidth="333.0" text="Networking" VBox.vgrow="ALWAYS">
+                            <TitledPane animated="false" expanded="false" prefHeight="223.0" prefWidth="333.0" text="Networking" VBox.vgrow="ALWAYS">
                                 <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <AnchorPane>
                                         <children>
-                                 <TabPane prefHeight="200.0" prefWidth="333.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="1.2" AnchorPane.leftAnchor="1.2" AnchorPane.rightAnchor="1.2" AnchorPane.topAnchor="1.2">
+                                 <TabPane layoutX="18.0" layoutY="14.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="25.0" tabMaxWidth="190.0" tabMinWidth="75.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                    <tabs>
                                      <Tab text="Chat">
                                        <content>
-                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="310.0">
                                                 <children>
-                                                   <VBox layoutX="4.0" layoutY="4.0" prefHeight="192.0" prefWidth="301.0">
+                                                   <VBox layoutX="4.0" layoutY="4.0">
                                                       <children>
-                                                         <ListView fx:id="chatHistory" prefHeight="200.0" prefWidth="200.0" />
-                                                         <TextField fx:id="textEntry" prefHeight="52.0" prefWidth="301.0" />
-                                                         <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendChatMessage" prefHeight="25.0" prefWidth="123.0" text="Send" />
+                                                         <ListView fx:id="chatHistory" prefHeight="100.0" />
+                                                         <HBox prefHeight="26.0" prefWidth="301.0">
+                                                            <children>
+                                                               <TextField fx:id="textEntry" prefHeight="18.0" prefWidth="301.0" />
+                                                               <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendChatMessage" prefHeight="25.0" prefWidth="123.0" text="Send" />
+                                                            </children>
+                                                         </HBox>
                                                       </children>
                                                    </VBox>
                                                 </children>

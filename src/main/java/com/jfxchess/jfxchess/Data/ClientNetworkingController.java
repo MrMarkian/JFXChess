@@ -3,6 +3,9 @@ package com.jfxchess.jfxchess.Data;
 import com.jfxchess.jfxchess.Main;
 import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +19,11 @@ import java.util.Scanner;
 public class ClientNetworkingController extends Thread implements NetworkingCommon{
 
     public boolean runClient = false;
-    Socket socket;
-    String hostIp = "localhost";
-    int port = 5000;
+    public Socket socket;
+    public String hostIp = "localhost";
+    public int port = 5000;
     public MainUIController uiController;
-
+    public Player me;
     @Override
     public void run() {
 
@@ -28,17 +31,17 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
         this.setDaemon(true);
 
         try{
-            socket = new Socket(hostIp, port);
+            socket = new Socket(me.IP, port);
             BufferedReader incomingData = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter outgoingData = new PrintWriter(socket.getOutputStream(), true);
-            networkingLog.add("CLIENT::Client Instance Started" + hostIp + " Port: " + port);
-            Scanner scanner = new Scanner(System.in);
-            String echoString;
+            networkingLog.add("CLIENT::Client Instance Started" + me.IP + " Port: " + port);
+
             String response;
             boolean ProcessNetworking = true;
-
+            updateColor();
             do {
                 response = incomingData.readLine();
+
                 System.out.println("Full String Received: " + response);
 
                 String[] parseDataStream = response.split("%");
@@ -68,7 +71,7 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
         switch (parseDataStream[0]){
             case "FEN":{
-                networkingLog.add("CLIENT::FEN Received!:-" + parseDataStream[1]);
+                networkingLog.add("CLIENT::FEN Received: " + parseDataStream[1]);
                 Platform.runLater(() -> BoardManager.LoadPositionsFromFEN(parseDataStream[1]));
                 Platform.runLater(()-> {
                     try {
@@ -107,7 +110,7 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 break;
             }
             case "MESSAGE":{
-                networkingLog.add("Message Recieved: " );
+                networkingLog.add("CLIENT::MESSAGE:: " );
                 Platform.runLater(()-> {
                     try {
                         uiController.addChatMessage(parseDataStream[1]);
@@ -119,6 +122,9 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 break;
 
             }
+            case "SETCOLOR":{
+                me.COLOR = ChessTeamColor.valueOf(parseDataStream[1]);
+            }
             default:{
                 networkingLog.add("CLIENT::UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
             }
@@ -128,6 +134,11 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     @Override
     public void SendMove(Move moveToSend) throws IOException {
+
+        if(BoardManager.playerToMoveNext != me.COLOR){
+            return;
+        }
+
         if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
             output.println("MOVE%" + moveToSend.printNetworkTextValues());
@@ -171,4 +182,8 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     }
 
+    public void updateColor() throws IOException {
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        output.println("GETCOLOR%");
+    }
 }
