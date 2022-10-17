@@ -2,6 +2,8 @@ package com.jfxchess.jfxchess.Data;
 
 import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,12 +65,12 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                 case "MOVE" -> {
 
                     Move incomingMove = new Move(commandData[1]);
-
                     networkingLog.add("SERVER INCOMING MOVE:" + incomingMove);
-
-                    if (BoardManager.ruleBook.isMoveValid(incomingMove, BoardManager.gameBoard)) {
-                        BoardManager.MovePiece(incomingMove);
-
+                    if (BoardManager.getPlayerToMoveNext() == localPlayer.COLOR){
+                        SendAlert("Not Your Turn", "Wait for your turn", "bastard");
+                        return;
+                    }
+                    if (BoardManager.MovePiece(incomingMove)) {
                         networkingLog.add("SERVER:: MOVE INSTRUCTION RECEIVED :: " + incomingMove.toString());
                         SendBoardState();
                         Platform.runLater(()-> {
@@ -187,6 +189,26 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
     @Override
     public void ReceiveMessage(String message) {
 
+    }
+
+    @Override
+    public void SendAlert(String title, String header, String content) throws IOException {
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        output.println("ALERT%" + title + "%" + header +"%" + content);
+        networkingLog.add("SERVER:: Alert Sent :: " + title);
+    }
+
+    @Override
+    public void ReceiveAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+        });
     }
 
     public void SendFENString (String FENString) throws IOException {

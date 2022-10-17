@@ -94,6 +94,9 @@ public class MainUIController {
     //TABS:
 
     @FXML
+    private Accordion accoridan;
+
+    @FXML
     private TitledPane GameStatusTab;
     @FXML
     private TitledPane FENMngTab;
@@ -148,6 +151,12 @@ public class MainUIController {
 
         UpdateUI();
 
+    }
+
+    @FXML
+    protected void SendTestAlert() throws IOException {
+        server.SendAlert("Test Alert", "This is a test broadcast message", "For You!");
+        accoridan.getPanes().clear();
     }
 
     @FXML
@@ -452,14 +461,12 @@ public class MainUIController {
 
               if(WhiteAI.isSelected() && BoardManager.getPlayerToMoveNext() == ChessTeamColor.WHITE ){
                 if(BoardManager.hal9000.isRunning()) {
-
                     AIMenuEnabled.setSelected(BoardManager.hal9000.isRunning());
                     forceAIMoveClick();
                 }
             }
             if(BlackAI.isSelected() && BoardManager.getPlayerToMoveNext() == ChessTeamColor.BLACK ){
                 if(BoardManager.hal9000.isRunning()) {
-
                     AIMenuEnabled.setSelected(BoardManager.hal9000.isRunning());
                     forceAIMoveClick();
                 }
@@ -467,10 +474,8 @@ public class MainUIController {
 
             if(BlackAI.isSelected() && WhiteAI.isSelected()){
                 if (BoardManager.hal9000.isRunning()) {
-
                     AIMenuEnabled.setSelected(BoardManager.hal9000.isRunning());
                     forceAIMoveClick();
-
                 }
             }
         }

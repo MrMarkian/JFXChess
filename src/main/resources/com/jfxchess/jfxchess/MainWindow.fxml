@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.CheckMenuItem?>
@@ -29,7 +30,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="659.0" prefWidth="929.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
+<VBox prefHeight="843.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <items>
@@ -62,6 +63,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Multiplayer">
             <items>
+            <MenuItem mnemonicParsing="false" onAction="#SendTestAlert" text="Send Test Alert" />
             <MenuItem mnemonicParsing="false" onAction="#ShowNetworkWindow" text="Show Network Window" />
             </items>
         </Menu>
@@ -102,41 +104,41 @@
         </Menu>
     </MenuBar>
     <AnchorPane VBox.vgrow="ALWAYS">
-        <SplitPane dividerPositions="0.36245954692556637" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane dividerPositions="0.125" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
                 <AnchorPane>
                     <children>
-                        <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <TitledPane fx:id="GameStatusTab" animated="false" collapsible="false" prefHeight="241.0" prefWidth="333.0" text="Game Status">
+                        <VBox spacing="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <TitledPane fx:id="GameStatusTab" animated="false" collapsible="false" minHeight="170.0" prefHeight="170.0" text="Game Status">
                                 <content>
                                     <AnchorPane minHeight="80.0" minWidth="80.0" prefHeight="135.0" prefWidth="331.0">
                                         <children>
                                             <VBox fillWidth="false" layoutX="8.0" layoutY="9.0" prefHeight="110.0" prefWidth="312.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
 
-                                                    <Label fx:id="welcomeText" text="JFXChess V1.0">
+                                                                <Label fx:id="welcomeText" text="JFXChess V1.2">
                                                         <font>
-                                                            <Font name="Tahoma Bold" size="24.0" />
+                                                            <Font name="OCR A Extended" size="20.0" />
                                                         </font>
                                                     </Label>
                                                     <Label fx:id="TurnCountLabel" text="Turn Count:">
                                                         <font>
-                                                            <Font name="Tahoma Bold" size="18.0" />
+                                                            <Font name="OCR A Extended" size="20.0" />
                                                         </font>
                                                     </Label>
                                                     <Label fx:id="BlackScoreLabel" text="Black Score:">
                                                         <font>
-                                                            <Font name="Tahoma Bold" size="18.0" />
+                                                            <Font name="OCR A Extended" size="20.0" />
                                                         </font>
                                                     </Label>
                                                     <Label fx:id="WhiteScoreLabel" layoutX="10.0" layoutY="33.0" text="White Score:">
                                                         <font>
-                                                            <Font name="Tahoma Bold" size="18.0" />
+                                                            <Font name="OCR A Extended" size="20.0" />
                                                         </font>
                                                     </Label>
                                        <Label fx:id="Namelabel" text="Name:">
                                           <font>
-                                             <Font name="System Bold" size="22.0" />
+                                             <Font name="OCR A Extended" size="20.0" />
                                           </font>
                                        </Label>
                                                 </children>
@@ -144,115 +146,11 @@
                                         </children>
                                     </AnchorPane>
                                 </content>
+                        <font>
+                           <Font name="Verdana Bold" size="13.0" />
+                        </font>
                             </TitledPane>
-                            <TitledPane fx:id="AIControlTab" expanded="false" text="AI Control">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <Button layoutX="24.0" layoutY="61.0" mnemonicParsing="false" onAction="#forceAIMoveClick" prefHeight="25.0" prefWidth="287.0" text="Force AI Move" />
-                                            <CheckBox fx:id="AIEnabledCheckBox" layoutX="24.0" layoutY="9.0" mnemonicParsing="false" text="AI Enabled" />
-                                            <CheckBox fx:id="AIPlayWhiteCheckbox" layoutX="225.0" layoutY="9.0" mnemonicParsing="false" text="Play White" />
-                                            <CheckBox fx:id="ALPlayBlackCheckbox" layoutX="225.0" layoutY="34.0" mnemonicParsing="false" text="Play Black" />
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane fx:id="AIThboughtsTab" expanded="false" text="AI Thoughts">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <ListView fx:id="AIThoughtsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane fx:id="ManualMoveTab" expanded="false" text="Manual Move Control">
-                                <content>
-                                    <AnchorPane prefHeight="173.0" prefWidth="331.0">
-                                        <children>
-                                 <VBox layoutX="18.6" layoutY="19.6" prefHeight="166.0" prefWidth="312.0" AnchorPane.bottomAnchor="38.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                    <children>
-                                       <HBox>
-                                          <children>
-                                                          <TextField fx:id="moveStartInputBox" prefHeight="25.0" prefWidth="143.0" promptText="Move Start" />
-                                                          <TextField fx:id="moveEndInputBox" prefHeight="25.0" prefWidth="104.0" promptText="Move End" />
-                                                          <Button fx:id="MoveButton" mnemonicParsing="false" onAction="#MoveButtonClick" prefHeight="25.0" prefWidth="65.0" text="Move" HBox.hgrow="ALWAYS" />
-                                          </children>
-                                       </HBox>
-                                              <TitledPane fx:id="FENMngTab" expanded="false" text="FEN String Managment">
-                                                  <content>
-                                                      <AnchorPane prefHeight="61.0" prefWidth="291.0">
-                                                          <children>
-                                                   <VBox prefHeight="51.0" prefWidth="245.0">
-                                                      <children>
-                                                                      <Button onAction="#onHelloButtonClick" text="Load FEN" />
-                                                                      <TextField fx:id="FENInputBox" prefHeight="25.0" prefWidth="181.0" promptText="Enter FEN String" />
-                                                      </children>
-                                                   </VBox>
-                                                          </children>
-                                                      </AnchorPane>
-                                                  </content>
-                                              </TitledPane>
-                                    </children>
-                                 </VBox>
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane fx:id="PossibleMovesTab" expanded="false" text="Possible Moves">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <ListView fx:id="moveListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane fx:id="MoveHistoryTab" expanded="false" text="Move History">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <children>
-                                                    <Button fx:id="CopyFENButton" mnemonicParsing="false" onAction="#CopyFENButtonClicked" prefHeight="33.0" prefWidth="110.0" text="Copy">
-                                                        <padding>
-                                                            <Insets bottom="5.0" />
-                                                        </padding>
-                                                    </Button>
-                                                    <ListView fx:id="moveHistoryListView" />
-                                                </children>
-                                            </VBox>
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane expanded="false" text="Board Setup">
-                                <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                        <children>
-                                            <ColorPicker fx:id="BlackSquareColorChooser" layoutX="196.0" layoutY="90.0" onAction="#updateGridSquareColor">
-                                                <value>
-                                                    <Color />
-                                                </value>
-                                            </ColorPicker>
-                                            <ColorPicker fx:id="WhiteSquareColorChooser" layoutX="196.0" layoutY="57.0" onAction="#updateGridSquareColor" />
-                                            <CheckBox layoutX="14.0" layoutY="50.0" mnemonicParsing="false" text="Edit Board Layout" />
-                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="38.0" layoutX="14.0" layoutY="71.0" stroke="BLACK" strokeType="INSIDE" width="41.0" />
-                                            <Slider fx:id="gridSizeSlider" blockIncrement="20.0" layoutX="13.0" layoutY="8.0" majorTickUnit="100.0" max="200.0" min="10.0" minorTickCount="25" onDragDone="#updateGridSize" prefHeight="38.0" prefWidth="296.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane expanded="false" text="CapturedPieces">
-                                <content>
-                                    <AnchorPane>
-                                        <children>
-                                            <Pane fx:id="captureRenderer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                        </children>
-                                    </AnchorPane>
-                                </content>
-                            </TitledPane>
-                            <TitledPane expanded="false" text="Stats">
+                            <TitledPane expanded="false" prefHeight="23.0" prefWidth="332.0" text="Stats">
                                 <content>
                                     <AnchorPane>
                                         <children>
@@ -271,38 +169,56 @@
                                         </children>
                                     </AnchorPane>
                                 </content>
+                        <font>
+                           <Font name="Verdana" size="12.0" />
+                        </font>
                             </TitledPane>
-                            <TitledPane animated="false" expanded="false" text="PGN Loaded Games">
+                            <TitledPane fx:id="PossibleMovesTab" expanded="false" text="Possible Moves">
                                 <content>
                                     <AnchorPane>
                                         <children>
-                                            <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <tabs>
-                                                    <Tab text="Untitled Tab 1">
-                                                        <content>
-                                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                                                <children>
-                                                                    <TableView fx:id="PGNTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                </children>
-                                                            </AnchorPane>
-                                                        </content>
-                                                    </Tab>
-                                                    <Tab text="Untitled Tab 2">
-                                                        <content>
-                                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                                                <children>
-                                                                    <ListView fx:id="PGNGameList" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                </children>
-                                                            </AnchorPane>
-                                                        </content>
-                                                    </Tab>
-                                                </tabs>
-                                            </TabPane>
+                                            <ListView fx:id="moveListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                         </children>
                                     </AnchorPane>
                                 </content>
+                        <font>
+                           <Font name="Verdana" size="12.0" />
+                        </font>
                             </TitledPane>
-                            <TitledPane animated="false" expanded="false" prefHeight="223.0" prefWidth="333.0" text="Networking" VBox.vgrow="ALWAYS">
+                            <TitledPane fx:id="MoveHistoryTab" expanded="false" text="Move History">
+                                <content>
+                                    <AnchorPane>
+                                        <children>
+                                            <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <children>
+                                                    <Button fx:id="CopyFENButton" mnemonicParsing="false" onAction="#CopyFENButtonClicked" prefHeight="33.0" prefWidth="110.0" text="Copy">
+                                                        <padding>
+                                                            <Insets bottom="5.0" />
+                                                        </padding>
+                                                    </Button>
+                                                    <ListView fx:id="moveHistoryListView" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </AnchorPane>
+                                </content>
+                        <font>
+                           <Font name="Verdana" size="12.0" />
+                        </font>
+                            </TitledPane>
+                            <TitledPane text="CapturedPieces" VBox.vgrow="ALWAYS">
+                                <content>
+                                    <AnchorPane>
+                                        <children>
+                                            <Pane fx:id="captureRenderer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        </children>
+                                    </AnchorPane>
+                                </content>
+                        <font>
+                           <Font name="Verdana" size="12.0" />
+                        </font>
+                            </TitledPane>
+                            <TitledPane expanded="false" prefHeight="165.0" prefWidth="319.0" text="Networking">
                                 <content>
                                     <AnchorPane>
                                         <children>
@@ -312,7 +228,7 @@
                                        <content>
                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="310.0">
                                                 <children>
-                                                   <VBox layoutX="4.0" layoutY="4.0">
+                                                   <VBox layoutX="4.0" layoutY="4.0" prefHeight="126.0" prefWidth="322.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
                                                       <children>
                                                          <ListView fx:id="chatHistory" prefHeight="100.0" />
                                                          <HBox prefHeight="26.0" prefWidth="301.0">
@@ -341,12 +257,152 @@
                                         </children>
                                     </AnchorPane>
                                 </content>
+                        <font>
+                           <Font name="Verdana" size="12.0" />
+                        </font>
                             </TitledPane>
+                     <Accordion fx:id="accoridan" VBox.vgrow="ALWAYS">
+                        <panes>
+                                  <TitledPane fx:id="AIControlTab" expanded="false" text="AI Control">
+                                      <content>
+                                          <AnchorPane>
+                                              <children>
+                                                  <Button layoutX="24.0" layoutY="61.0" mnemonicParsing="false" onAction="#forceAIMoveClick" prefHeight="25.0" prefWidth="287.0" text="Force AI Move" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                                                  <CheckBox fx:id="AIEnabledCheckBox" layoutX="24.0" layoutY="9.0" mnemonicParsing="false" text="AI Enabled" />
+                                                  <CheckBox fx:id="AIPlayWhiteCheckbox" layoutX="225.0" layoutY="9.0" mnemonicParsing="false" text="Play White" AnchorPane.rightAnchor="0.0" />
+                                                  <CheckBox fx:id="ALPlayBlackCheckbox" layoutX="225.0" layoutY="34.0" mnemonicParsing="false" text="Play Black" AnchorPane.rightAnchor="3.0" />
+                                              </children>
+                                          </AnchorPane>
+                                      </content>
+                              <font>
+                                 <Font name="Verdana" size="12.0" />
+                              </font>
+                                  </TitledPane>
+                                  <TitledPane fx:id="AIThboughtsTab" expanded="false" text="AI Thoughts">
+                                      <content>
+                                          <AnchorPane>
+                                              <children>
+                                                  <ListView fx:id="AIThoughtsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                              </children>
+                                          </AnchorPane>
+                                      </content>
+                              <font>
+                                 <Font name="Verdana" size="12.0" />
+                              </font>
+                                  </TitledPane>
+                                  <TitledPane fx:id="ManualMoveTab" expanded="false" text="Manual Move Control">
+                                      <content>
+                                          <AnchorPane prefHeight="173.0" prefWidth="331.0">
+                                              <children>
+                                       <VBox layoutX="18.6" layoutY="19.6" prefHeight="166.0" prefWidth="312.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <children>
+                                             <HBox spacing="5.0" VBox.vgrow="NEVER">
+                                                <children>
+                                                                <TextField fx:id="moveStartInputBox" prefHeight="25.0" prefWidth="143.0" promptText="Move Start" />
+                                                                <TextField fx:id="moveEndInputBox" prefHeight="25.0" prefWidth="104.0" promptText="Move End" />
+                                                                <Button fx:id="MoveButton" mnemonicParsing="false" onAction="#MoveButtonClick" prefHeight="25.0" prefWidth="65.0" text="Move" HBox.hgrow="ALWAYS" />
+                                                </children>
+                                                <padding>
+                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                </padding>
+                                             </HBox>
+                                                    <TitledPane fx:id="FENMngTab" expanded="false" text="FEN String Managment">
+                                                        <content>
+                                                            <AnchorPane prefHeight="61.0" prefWidth="291.0">
+                                                                <children>
+                                                         <VBox prefHeight="51.0" prefWidth="245.0">
+                                                            <children>
+                                                                            <Button onAction="#onHelloButtonClick" text="Load FEN" />
+                                                                            <TextField fx:id="FENInputBox" prefHeight="25.0" prefWidth="181.0" promptText="Enter FEN String" />
+                                                            </children>
+                                                         </VBox>
+                                                                </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                    </TitledPane>
+                                          </children>
+                                       </VBox>
+                                              </children>
+                                          </AnchorPane>
+                                      </content>
+                              <font>
+                                 <Font name="Verdana" size="12.0" />
+                              </font>
+                                  </TitledPane>
+                                  <TitledPane expanded="false" text="Board Setup">
+                                      <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <children>
+                                                  <ColorPicker fx:id="BlackSquareColorChooser" layoutX="196.0" layoutY="90.0" onAction="#updateGridSquareColor" AnchorPane.rightAnchor="5.0">
+                                                      <value>
+                                                          <Color />
+                                                      </value>
+                                                  </ColorPicker>
+                                                  <ColorPicker fx:id="WhiteSquareColorChooser" layoutX="196.0" layoutY="57.0" onAction="#updateGridSquareColor" AnchorPane.rightAnchor="5.0" />
+                                                  <CheckBox layoutX="14.0" layoutY="50.0" mnemonicParsing="false" text="Edit Board Layout" />
+                                                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="38.0" layoutX="14.0" layoutY="71.0" stroke="BLACK" strokeType="INSIDE" width="41.0" />
+                                                  <Slider fx:id="gridSizeSlider" blockIncrement="20.0" layoutX="13.0" layoutY="8.0" majorTickUnit="100.0" max="200.0" min="10.0" minorTickCount="25" onDragDone="#updateGridSize" prefHeight="38.0" prefWidth="296.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                              </children>
+                                          </AnchorPane>
+                                      </content>
+                              <font>
+                                 <Font name="Verdana" size="12.0" />
+                              </font>
+                                  </TitledPane>
+                                  <TitledPane animated="false" expanded="false" text="PGN Loaded Games">
+                                      <content>
+                                          <AnchorPane>
+                                              <children>
+                                                  <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <tabs>
+                                                          <Tab text="Untitled Tab 1">
+                                                              <content>
+                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                                      <children>
+                                                                          <TableView fx:id="PGNTableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                      </children>
+                                                                  </AnchorPane>
+                                                              </content>
+                                                          </Tab>
+                                                          <Tab text="Untitled Tab 2">
+                                                              <content>
+                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                                      <children>
+                                                                          <ListView fx:id="PGNGameList" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                      </children>
+                                                                  </AnchorPane>
+                                                              </content>
+                                                          </Tab>
+                                                      </tabs>
+                                                  </TabPane>
+                                              </children>
+                                          </AnchorPane>
+                                      </content>
+                                  </TitledPane>
+                        </panes>
+                     </Accordion>
+                     <padding>
+                        <Insets bottom="5.0" />
+                     </padding>
                         </VBox>
                     </children>
                 </AnchorPane>
-                <Pane fx:id="BoardRenderPane" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="24.0" prefWidth="615.0" />
+                      <Pane fx:id="BoardRenderPane" />
+               </children>
+            </VBox>
             </items>
+         <opaqueInsets>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </opaqueInsets>
         </SplitPane>
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+      <padding>
+         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+      </padding>
     </AnchorPane>
 </VBox>

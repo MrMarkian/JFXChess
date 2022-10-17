@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -125,6 +126,15 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
             case "SETCOLOR":{
                 me.COLOR = ChessTeamColor.valueOf(parseDataStream[1]);
             }
+
+            case "ALERT":{
+                networkingLog.add("CLIENT::ALERT:: ");
+                Platform.runLater(()-> {
+                    ReceiveAlert(parseDataStream[1],parseDataStream[2], parseDataStream[3]);
+                });
+                break;
+            }
+
             default:{
                 networkingLog.add("CLIENT::UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
             }
@@ -134,10 +144,6 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     @Override
     public void SendMove(Move moveToSend) throws IOException {
-
-        if(BoardManager.playerToMoveNext != me.COLOR){
-            System.out.println("CLIENT:: Incorrect Team Color");
-        }
 
         if(BoardManager.ruleBook.isMoveValid(moveToSend,BoardManager.gameBoard)) {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
@@ -180,6 +186,24 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     @Override
     public void ReceiveMessage(String message) {
 
+    }
+
+    @Override
+    public void SendAlert(String title, String header, String content) throws IOException {
+
+    }
+
+    @Override
+    public void ReceiveAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+        });
     }
 
     public void updateColor() throws IOException {

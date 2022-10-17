@@ -14,5 +14,6 @@ public interface NetworkingCommon {
      List<String> PrintLog();
      boolean SendMessage(String message) throws IOException;
      void ReceiveMessage(String message);
-
+     void SendAlert(String title, String header, String content) throws IOException;
+     void ReceiveAlert(String title, String header, String content);
 }

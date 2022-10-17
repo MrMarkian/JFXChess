@@ -38,6 +38,19 @@ public class NetworkWindow extends Application {
 
         @FXML
         void ConnectToServerClick(ActionEvent event) throws InterruptedException, IOException {
+                if (clientname.getText().isEmpty()){
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Name is empty");
+                        alert.setContentText("Please enter your name");
+                        alert.showAndWait().ifPresent(rs -> {
+                                if (rs == ButtonType.OK) {
+                                        System.out.println("Pressed OK.");
+                                }
+                        });
+                        return;
+                }
+
                 MainUIController MainUi = Main.getMainUIController();
                 MainUi.me = new Player(clientname.getText(), address.getText());
 
@@ -49,10 +62,25 @@ public class NetworkWindow extends Application {
 
         @FXML
         void hostButtonClick(ActionEvent event) throws InterruptedException {
+
+                if (hostname.getText().isEmpty()){
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Name is empty");
+                        alert.setContentText("Please enter your name");
+                        alert.showAndWait().ifPresent(rs -> {
+                                if (rs == ButtonType.OK) {
+                                        System.out.println("Pressed OK.");
+                                }
+                        });
+                        return;
+                }
+
                 MainUIController MainUi = Main.getMainUIController();
                 MainUi.me = new Player(hostname.getText(),"localhost");
                 MainUi.me.COLOR = ChessTeamColor.WHITE;
                 Stage stage = (Stage) hostButton.getScene().getWindow();
+
                 MainUi.StartServer(MainUi.me);
                 stage.close();
         }
