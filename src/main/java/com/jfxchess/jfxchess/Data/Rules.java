@@ -1,5 +1,7 @@
 package com.jfxchess.jfxchess.Data;
 
+import com.jfxchess.jfxchess.MainUIController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class Rules {
 
                     failureReason = "Check Detected";
                     BoardManager.hal9000.setRunning(false);
+                    MainUIController.DisplayAlert("Check Detected", "Check", "Check has been detected");
                     return false;
             }
         }
@@ -86,7 +89,6 @@ public class Rules {
         if(gameBoard.get(move.endPosition).pieceOnGrid.teamColor == gameBoard.get(move.startPosition).pieceOnGrid.teamColor){
          //   System.out.println("RULE VIOLATION: SAME TEAM");
             failureReason = "RULE VIOLATION: SAME TEAM";
-
             return false;
         }
 
@@ -100,6 +102,14 @@ public class Rules {
             subjectUnderTest.setCapturedPiece(BoardManager.gameBoard.get(subjectUnderTest.endPosition).pieceOnGrid.type);
         }
         return subjectUnderTest;
+    }
+    public boolean TestForCapture(Move subjectUnderTest, ChessPieceTypes pieceTypesToCheck){
+        if(BoardManager.gameBoard.get(subjectUnderTest.endPosition).pieceOnGrid.type == pieceTypesToCheck){
+            subjectUnderTest.setWillResultInCapture(true);
+            subjectUnderTest.setCapturedPiece(BoardManager.gameBoard.get(subjectUnderTest.endPosition).pieceOnGrid.type);
+            return true;
+        }
+        return false;
     }
 
 

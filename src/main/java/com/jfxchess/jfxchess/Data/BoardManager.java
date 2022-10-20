@@ -59,7 +59,7 @@ public  class BoardManager {
         }
         playerToMoveNext = ChessTeamColor.WHITE;
         TurnCounter =0;
-        capturedPieces.clear();
+      //  capturedPieces.clear();
         hal9000.AIThoughts.clear();
        // hal9000.setRunning(true);
     }
@@ -280,8 +280,6 @@ public  class BoardManager {
 
             graphicContext.setBorder(new Border(new BorderStroke(Color.BLACK,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-
-
         });
 
         return  graphicContext;
@@ -313,7 +311,6 @@ public  class BoardManager {
 
         int countPosition =0;
         int emptySquareCount = 0;
-
 
         class Flusher{
 
@@ -395,7 +392,6 @@ public  class BoardManager {
             }
         }
 
-
         switch (BoardManager.playerToMoveNext){
             case WHITE -> FENString.append(" w ");
 
@@ -403,8 +399,6 @@ public  class BoardManager {
         }
         FENString.append("KQkq - 0 1");
         return FENString.toString();
-
-
     }
 
 
@@ -544,6 +538,8 @@ public  class BoardManager {
         }
         TurnCounter++;
     }
+
+    public static List<ChessPiece> getCapturedPieces(){return capturedPieces;}
 
     public static List<ChessGrid> getGameBoard() {
         return gameBoard;

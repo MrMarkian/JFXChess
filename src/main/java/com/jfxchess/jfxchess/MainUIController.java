@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
 public class MainUIController {
 //region UIElements
     @FXML
@@ -495,7 +496,19 @@ public class MainUIController {
                 captureRenderer.getChildren().add(BoardManager.RenderCapturedPieces(50));
             }
         });
-
-
     }
+
+    public static void DisplayAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+        });
+    }
+
+
 }

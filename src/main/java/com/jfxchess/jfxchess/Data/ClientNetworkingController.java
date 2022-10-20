@@ -27,7 +27,7 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
     public Player me;
     @Override
     public void run() {
-
+        System.out.println("Networking Client Started.");
         runClient = true;
         this.setDaemon(true);
 
@@ -193,6 +193,8 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     }
 
+
+    //TODO: This is now depricated, now use the function in MainUIController
     @Override
     public void ReceiveAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

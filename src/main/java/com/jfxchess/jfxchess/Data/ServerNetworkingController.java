@@ -33,7 +33,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
     @Override
     public void run() {
-
+        System.out.println("Networking Server Started.");
         runServer = true;
         this.setDaemon(true);
 
@@ -151,9 +151,16 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
         }
         networkingLog.add("SERVER:: Sending Move :: " + moveToSend.toString());
-        if(BoardManager.MovePiece(moveToSend)){
-            SendFENString(BoardManager.SavePositionToFEN());
-        }
+        Platform.runLater(()->{
+            if(BoardManager.MovePiece(moveToSend)){
+                try {
+                    SendFENString(BoardManager.SavePositionToFEN());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
 
     }
 
@@ -211,9 +218,22 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
         });
     }
 
+    public void SendCapturedPieces(){
+
+    }
+
+    public void SendMoveHistory(){
+
+    }
+
+
+
     public void SendFENString (String FENString) throws IOException {
         PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
         output.println("FEN%" + FENString);
         networkingLog.add("SERVER:: Sending FEN String :: " + FENString);
     }
+
+    private void WriteToOutputStream(String rawString){}
+
 }
