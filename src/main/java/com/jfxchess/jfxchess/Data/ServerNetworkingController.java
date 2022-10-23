@@ -4,6 +4,7 @@ import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import kotlin.NotImplementedError;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -207,22 +208,25 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
 
     @Override
     public void ReceiveAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                System.out.println("Pressed OK.");
-            }
-        });
+        MainUIController.DisplayAlert(title,header,content);
     }
 
-    public void SendCapturedPieces(){
+    public void SendCapturedPieces() throws IOException {
 
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        StringBuilder outputString = new StringBuilder("CAPTURED%" + BoardManager.capturedPieces.size() + "%");
+
+        for (ChessPiece cp: BoardManager.capturedPieces) {
+                outputString.append(cp.exportChessPieceToFENChar()).append("%");
+        }
+
+        output.println(outputString.toString());
+        networkingLog.add("SERVER:: Captured Pieces Sent :: " + outputString);
     }
 
     public void SendMoveHistory(){
+
+        throw new NotImplementedError();
 
     }
 

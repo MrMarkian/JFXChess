@@ -20,6 +20,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.speech.AudioException;
+import javax.speech.EngineException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -116,6 +118,21 @@ public class MainUIController {
     private final PGNController pgnController = new PGNController();
 //endregion
     final ClientNetworkingController client = new ClientNetworkingController();
+    public static final TTSEngine ttsEngine;
+
+    static {
+        try {
+            ttsEngine = new TTSEngine();
+        } catch (EngineException e) {
+            throw new RuntimeException(e);
+        } catch (AudioException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     ServerNetworkingController server;
     {
         server = new ServerNetworkingController();
@@ -154,11 +171,7 @@ public class MainUIController {
 
     }
 
-    @FXML
-    protected void SendTestAlert() throws IOException {
-        server.SendAlert("Test Alert", "This is a test broadcast message", "For You!");
-        accoridan.getPanes().clear();
-    }
+
 
     @FXML
     protected void Show3DWindow() throws Exception {
@@ -307,6 +320,7 @@ public class MainUIController {
 
     }
 
+    //<editor-fold desc="Networking Area">
     @FXML
     protected void ShowNetworkWindow() throws IOException {
         NetworkWindow networkWindow = new NetworkWindow();
@@ -320,8 +334,36 @@ public class MainUIController {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setResizable(false);
         dialog.showAndWait();
+    }
 
-// process result of dialog operation.
+    @FXML
+    protected void SendHistory() {
+        if(server != null){
+            server.SendMoveHistory();
+        }
+    }
+
+    @FXML
+    protected void SendCapturedPieces(){
+        if(server != null){
+            try {
+                server.SendCapturedPieces();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @FXML
+    protected void SendTestAlert() throws IOException {
+        server.SendAlert("Test Alert", "This is a test broadcast message", "For You!");
+        accoridan.getPanes().clear();
+    }
+    //</editor-fold>
+
+    @FXML
+    protected void TestTTS() {
+        ttsEngine.Speak("Stinking Flappy Fanny Wank");
 
     }
 
@@ -329,6 +371,7 @@ public class MainUIController {
     private void updateGridSize() throws InterruptedException {
         UpdateUI();
     }
+
 
     @FXML
     public void initialize(){
@@ -499,15 +542,22 @@ public class MainUIController {
     }
 
     public static void DisplayAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                System.out.println("Pressed OK.");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(title);
+                alert.setHeaderText(header);
+                alert.setContentText(content);
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
             }
         });
+
+
     }
 
 

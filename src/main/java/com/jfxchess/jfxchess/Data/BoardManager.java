@@ -1,5 +1,6 @@
 package com.jfxchess.jfxchess.Data;
 
+import com.jfxchess.jfxchess.MainUIController;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -39,7 +40,7 @@ public  class BoardManager {
         }
     }
 
-    public static final List<ChessPiece> capturedPieces = new ArrayList<>();
+    public static List<ChessPiece> capturedPieces = new ArrayList<>();
 
     public static Color whiteSquares;
     public static Color blackSquares;
@@ -287,14 +288,15 @@ public  class BoardManager {
 
     public static boolean MovePiece(Move move){
         if (ruleBook.isMoveValid(move, gameBoard)) {
-            if(move.isWillResultInCapture()){
-                capturedPieces.add(new ChessPiece(gameBoard.get(move.endPosition).pieceOnGrid.type,gameBoard.get(move.endPosition).pieceOnGrid.teamColor,gameBoard.get(move.endPosition).pieceOnGrid.graphic));
-            }
+            MainUIController.ttsEngine.SpeakMove(move);
             gameBoard.get(move.endPosition).pieceOnGrid = gameBoard.get(move.startPosition).pieceOnGrid;
             gameBoard.get(move.startPosition).pieceOnGrid = new ChessPiece();
             mediaController.chessMoveSound.play();
-
+            if(move.isWillResultInCapture()){
+                capturedPieces.add(new ChessPiece(gameBoard.get(move.endPosition).pieceOnGrid.type,gameBoard.get(move.endPosition).pieceOnGrid.teamColor,gameBoard.get(move.endPosition).pieceOnGrid.graphic));
+            }
             incrementTurn();
+
             return true;
         }else return false;
 

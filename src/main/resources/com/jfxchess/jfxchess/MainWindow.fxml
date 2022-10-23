@@ -30,7 +30,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="843.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
+<VBox prefHeight="843.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jfxchess.jfxchess.MainUIController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <items>
@@ -63,8 +63,15 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Multiplayer">
             <items>
-            <MenuItem mnemonicParsing="false" onAction="#SendTestAlert" text="Send Test Alert" />
             <MenuItem mnemonicParsing="false" onAction="#ShowNetworkWindow" text="Show Network Window" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu mnemonicParsing="false" text="Test Functions">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#SendHistory" text="Send History" />
+                  <MenuItem mnemonicParsing="false" onAction="#SendTestAlert" text="Send Test Alert" />
+                  <MenuItem mnemonicParsing="false" onAction="#SendCapturedPieces" text="Send Captured" />
+              </items>
+            </Menu>
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Theme">
@@ -100,6 +107,7 @@
         <Menu mnemonicParsing="false" text="Help">
             <items>
                 <MenuItem mnemonicParsing="false" text="About" />
+            <MenuItem mnemonicParsing="false" onAction="#TestTTS" text="TestTTS" />
             </items>
         </Menu>
     </MenuBar>

@@ -1,12 +1,7 @@
 package com.jfxchess.jfxchess.Data;
 
-import com.jfxchess.jfxchess.Main;
 import com.jfxchess.jfxchess.MainUIController;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +10,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ClientNetworkingController extends Thread implements NetworkingCommon{
 
@@ -135,6 +129,19 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 break;
             }
 
+            case "CAPTURED":{
+                networkingLog.add("CLIENT::CAPTURES_LIST:: ");
+
+                int numberOfParams = Integer.parseInt(parseDataStream[1]);
+                BoardManager.capturedPieces.clear();
+                for(int a =0; a < numberOfParams; a++){
+                    ChessPiece tmp = new ChessPiece();
+                    tmp.importChessPieceFromFENChar(parseDataStream[a+2].charAt(0));
+                    BoardManager.capturedPieces.add(tmp);
+
+                }
+            }
+
             default:{
                 networkingLog.add("CLIENT::UNHANDLED COMMAND:" + parseDataStream[0] + " DATASTREAM:" + parseDataStream[1]);
             }
@@ -193,19 +200,9 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
 
     }
 
-
-    //TODO: This is now depricated, now use the function in MainUIController
     @Override
     public void ReceiveAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                System.out.println("Pressed OK.");
-            }
-        });
+        MainUIController.DisplayAlert(title,header,content);
     }
 
     public void updateColor() throws IOException {
