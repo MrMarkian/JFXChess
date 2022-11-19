@@ -15,7 +15,7 @@ import java.net.Socket;
 import java.util.List;
 
 
-public class ServerNetworkingController extends Thread implements NetworkingCommon{
+public class ServerNetworkingController extends Thread implements NetworkingCommon, Runnable{
 
     public boolean runServer = false;
     ServerSocket serverSocket;
@@ -161,8 +161,6 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                 }
             }
         });
-
-
     }
 
     @Override

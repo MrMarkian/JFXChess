@@ -1,5 +1,6 @@
 package com.jfxchess.jfxchess.Data;
 
+import com.jfxchess.jfxchess.Main;
 import com.jfxchess.jfxchess.MainUIController;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -29,6 +30,8 @@ public  class BoardManager {
     public static final List<Rectangle> ImageGridList = new ArrayList<>();
 
     public static double TurnCounter ;
+
+    public static ChessClockController chessClocks = new ChessClockController(Main.getMainUIController());
 
     static MediaController mediaController = null;
 
@@ -63,6 +66,10 @@ public  class BoardManager {
       //  capturedPieces.clear();
         hal9000.AIThoughts.clear();
        // hal9000.setRunning(true);
+
+        chessClocks.InitTimers(10);
+        chessClocks.SetCurrentTurn(ChessTeamColor.WHITE);
+
     }
 
     public static void printBoard(){
@@ -539,6 +546,7 @@ public  class BoardManager {
             playerToMoveNext = ChessTeamColor.WHITE;
         }
         TurnCounter++;
+        chessClocks.SetCurrentTurn(playerToMoveNext);
     }
 
     public static List<ChessPiece> getCapturedPieces(){return capturedPieces;}

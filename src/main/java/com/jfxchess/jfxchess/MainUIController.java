@@ -2,6 +2,7 @@ package com.jfxchess.jfxchess;
 
 import com.jfxchess.jfxchess.Data.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import javax.speech.AudioException;
 import javax.speech.EngineException;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -94,6 +96,11 @@ public class MainUIController {
     @FXML
     private ListView<String> NetworkingListView;
 
+    @FXML
+    public Label WhiteClockLabel;
+    @FXML
+    public Label BlackClockLabel;
+
     //TABS:
 
     @FXML
@@ -152,6 +159,10 @@ public class MainUIController {
         moveHistoryListView.getItems().add(BoardManager.SavePositionToFEN());
         StatsBarChart.getData().clear();
         UpdateUI();
+    }
+
+    private void UpdateChessClocks(){
+
     }
 
     @FXML
@@ -386,12 +397,10 @@ public class MainUIController {
             }
         });
 
+
         AIPlayWhiteCheckbox.setOnMouseClicked(event -> WhiteAI.setSelected(AIPlayWhiteCheckbox.isSelected()));
-
         ALPlayBlackCheckbox.setOnMouseClicked(event -> BlackAI.setSelected(ALPlayBlackCheckbox.isSelected()));
-
         AIEnabledCheckBox.setOnMouseClicked(event -> AIMenuEnabled.setSelected(AIEnabledCheckBox.isSelected()));
-
         moveHistoryListView.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2){
                 FENInputBox.setText(moveHistoryListView.getSelectionModel().getSelectedItem());
@@ -402,7 +411,6 @@ public class MainUIController {
                 }
             }
         });
-
         BoardRenderPane.setOnMouseClicked(event -> {
 
 
