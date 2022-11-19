@@ -8,4 +8,4 @@ Supported Features
  - [ ] Full PNG support
  - [ ] 3D models on 3d view of chess board.
  - [ ] Recursive AI engine(currently only 1 level deep)
-  
+ - [x] Chess Clocks
