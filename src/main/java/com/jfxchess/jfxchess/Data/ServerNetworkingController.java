@@ -145,6 +145,12 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
         output.println("FEN%"+BoardManager.SavePositionToFEN());
     }
 
+    public void SyncTimerClocks() throws IOException {
+        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+        networkingLog.add("SERVER:: Sending CLOCKS State :: ");
+        output.println("SETCLOCKS%"+ BoardManager.chessClocks.GetClocks());
+    }
+
     @Override
     public void SendMove(Move moveToSend) throws IOException {
         if(BoardManager.playerToMoveNext != localPlayer.COLOR){
@@ -161,6 +167,7 @@ public class ServerNetworkingController extends Thread implements NetworkingComm
                 }
             }
         });
+
     }
 
     @Override

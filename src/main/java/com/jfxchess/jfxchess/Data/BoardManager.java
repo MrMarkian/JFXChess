@@ -197,57 +197,57 @@ public  class BoardManager {
                     case ROOK -> {
 
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackRook);
+                            tmpImg = new ImagePattern(mediaController.getBlackRook());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whiteRook);
+                            tmpImg = new ImagePattern(mediaController.getWhiteRook());
                         }
 
                     }
 
                     case BISHOP -> {
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackBishop);
+                            tmpImg = new ImagePattern(mediaController.getBlackBishop());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whiteBishop);
+                            tmpImg = new ImagePattern(mediaController.getWhiteBishop());
                         }
                     }
 
                     case PAWN -> {
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackPawn);
+                            tmpImg = new ImagePattern(mediaController.getBlackPawn());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whitePawn);
+                            tmpImg = new ImagePattern(mediaController.getWhitePawn());
                         }
 
                     }
 
                     case KNIGHT -> {
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackKnight);
+                            tmpImg = new ImagePattern(mediaController.getBlackKnight());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whiteKnight);
+                            tmpImg = new ImagePattern(mediaController.getWhiteKnight());
                         }
                     }
 
                     case KING -> {
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackKing);
+                            tmpImg = new ImagePattern(mediaController.getBlackKing());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whiteKing);
+                            tmpImg = new ImagePattern(mediaController.getWhiteKing());
                         }
                     }
 
                     case QUEEN -> {
                         if(gridSquare.pieceOnGrid.teamColor == ChessTeamColor.BLACK){
-                            tmpImg = new ImagePattern(mediaController.blackQueen);
+                            tmpImg = new ImagePattern(mediaController.getBlackQueen());
                         }
                         else{
-                            tmpImg = new ImagePattern(mediaController.whiteQueen);
+                            tmpImg = new ImagePattern(mediaController.getWhiteQueen());
                         }
                     }
                 }

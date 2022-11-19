@@ -37,17 +37,16 @@ public class ChessClockController {
         currentTurn = team;
     }
 
-    public void StartTurnTimer(){
-        switch (currentTurn){
-            case WHITE -> {
-
-            }
-            case BLACK -> {
-
-            }
-        }
+    public void SetClocks(String times){
+        String[] parsedData;
+        parsedData = times.split("!");
+        whiteDuration = Duration.parse(parsedData[0]);
+        blackDuration = Duration.parse(parsedData[1]);
     }
 
+    public String GetClocks(){
+        return whiteDuration.toString() + "!" + blackDuration.toString();
+    }
 
     public static String formatTime(Duration d) {
 

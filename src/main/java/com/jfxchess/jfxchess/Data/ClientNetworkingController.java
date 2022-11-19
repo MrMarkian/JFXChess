@@ -129,6 +129,10 @@ public class ClientNetworkingController extends Thread implements NetworkingComm
                 break;
             }
 
+            case "SETCLOCKS":{
+                BoardManager.chessClocks.SetClocks(parseDataStream[1]);
+            }
+
             case "CAPTURED":{
                 networkingLog.add("CLIENT::CAPTURES_LIST:: ");
 
